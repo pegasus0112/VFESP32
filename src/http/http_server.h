@@ -1,0 +1,1 @@
+void networking_init();
