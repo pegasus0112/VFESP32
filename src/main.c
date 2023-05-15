@@ -1,5 +1,5 @@
 #include "utils.h"
-#include "controle.h"
+#include "controle/controle.h"
 #include "sensors/sensors.h"
 
 #include "freertos/FreeRTOS.h"
@@ -19,6 +19,6 @@ void app_main()
         bright = remap_float_to_range(bright, 0,400,FAN_MIN,FAN_MAX);
         printf("new brightness: %f \n", bright);
 
-        updateDutyMotor(bright);
+        change_duty_fan(bright);
     }
 }
