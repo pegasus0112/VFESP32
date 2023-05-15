@@ -1,7 +1,7 @@
 #include "esp_event.h"
 #include "esp_http_server.h"
 #include "json/jsonHandler.h"
-#include "controle/controle.h"
+#include "control/control.h"
 #include "sensors/sensors.h"
 
 esp_err_t post_fan_duty_handler(httpd_req_t *req) {

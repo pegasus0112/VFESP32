@@ -1,6 +1,6 @@
 #include "cJSON.h"
 #include "sensors/sensors.h"
-#include "controle/controle.h"
+#include "control/control.h"
 #include <string.h>
 
 int get_int_from_Json(char* json_string, char* key) {

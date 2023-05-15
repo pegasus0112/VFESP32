@@ -1,4 +1,4 @@
-#include "controle.h"
+#include "control.h"
 #include "driver/ledc.h"
 #include "utils.h"
 
@@ -153,10 +153,17 @@ void update_duty_led(int duty)
 //return string of methode executed state
 char * change_duty_fan(int duty) 
 {
-    if (duty > 100 || duty < 0)
+    if (duty < 0)
     {
         return "set fan duty not between 0-100";
-        }
+    }
+    
+    if (duty > 100)
+    {
+        FAN_PERCENT = 100;
+        update_duty_fan(FAN_MAX);
+        return "set fan duty to max";
+    }
 
     if (duty == 0)
     {
