@@ -1,5 +1,10 @@
 {
     "files.associations": {
-        "http_handler.h": "c"
+        "http_handler.h": "c",
+        "jsonhandler.h": "c",
+        "cstdio": "c",
+        "memory_resource": "c",
+        "sstream": "c",
+        "typeinfo": "c"
     }
 }
