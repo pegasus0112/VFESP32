@@ -16,8 +16,8 @@ void app_main()
         read_allSensor_Data();
         float bright = BRIGHTNESS;
         printf("brightness: %f \n", bright);
-        bright = remap_float_to_range(bright, 0,400,FAN_MIN,FAN_MAX);
-        printf("new brightness: %f \n", bright);
+        bright = remap_float_to_range(bright, 0,400,0,100);
+        printf("remapped brightness: %f \n", bright);
 
         change_duty_fan(bright);
     }
