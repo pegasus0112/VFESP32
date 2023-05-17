@@ -1,7 +1,7 @@
 #include "esp_event.h"
 #include "esp_http_server.h"
 #include "json/jsonHandler.h"
-#include "controle/controle.h"
+#include "control/control.h"
 #include "sensors/sensors.h"
 
 esp_err_t post_fan_duty_handler(httpd_req_t *req) {
@@ -26,14 +26,19 @@ esp_err_t post_led_duty_handler(httpd_req_t *req) {
     char req_body[20];
     httpd_req_recv(req, req_body, sizeof(req_body));
 
-    int new_duty = get_int_from_Json(req_body, "led_duty");
-    httpd_resp_send(req, change_duty_led(new_duty), HTTPD_RESP_USE_STRLEN);
+    int new_duty_red = get_int_from_Json(req_body, "led_duty_red");
+    change_duty_led_red(new_duty_red);
+
+    int new_duty_blue = get_int_from_Json(req_body, "led_duty_vlue");
+    change_duty_led_blue(new_duty_blue);
+
+    httpd_resp_send(req, "", HTTPD_RESP_USE_STRLEN);
     return ESP_OK;
 };
 
 esp_err_t get_sensor_data_handler(httpd_req_t *req) {
     read_allSensor_Data();
     httpd_resp_set_type(req, HTTPD_TYPE_JSON);
-    httpd_resp_send(req, get__sensor_status_as_json_string(), HTTPD_RESP_USE_STRLEN);
+    httpd_resp_send(req, get_sensor_status_as_json_string(), HTTPD_RESP_USE_STRLEN);
     return ESP_OK;
 };
