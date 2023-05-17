@@ -5,6 +5,8 @@
         "cstdio": "c",
         "memory_resource": "c",
         "sstream": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "ultrasonic.h": "c",
+        "esp_err.h": "c"
     }
 }

@@ -16,7 +16,7 @@ float PUMP_PERCENT = 0;
 #define PUMP_FREQUENCY (5000)           //frequency in Hertz.
 #define PUMP_TIMER LEDC_TIMER_1
 #define PUMP_MODE LEDC_LOW_SPEED_MODE
-#define PUMP_OUTPUT_IO (16)             //output GPIO
+#define PUMP_OUTPUT_IO (14)             //output GPIO
 #define PUMP_CHANNEL LEDC_CHANNEL_1
 #define PUMP_DUTY_RES LEDC_TIMER_13_BIT //duty resolution to 13 bits
 
@@ -25,7 +25,7 @@ float LED_RED_PERCENT = 0;
 #define LED_RED_FREQUENCY (1000)              //frequency in Hertz.
 #define LED_RED_TIMER LEDC_TIMER_2
 #define LED_RED_MODE LEDC_HIGH_SPEED_MODE
-#define LED_RED_OUTPUT_IO (17)              //output GPIO
+#define LED_RED_OUTPUT_IO (16)              //output GPIO
 #define LED_RED_CHANNEL LEDC_CHANNEL_2
 #define LED_RED_DUTY_RES LEDC_TIMER_13_BIT  //duty resolution to 13 bits
 
