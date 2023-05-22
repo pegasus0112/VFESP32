@@ -11,21 +11,12 @@ float FAN_PERCENT;
 #define FAN_CHANNEL LEDC_CHANNEL_0
 #define FAN_DUTY_RES LEDC_TIMER_13_BIT  //duty resolution 13 bits
 
-float PUMP_PERCENT = 0;
-#define PUMP_DUTY (2700)                //start duty of pump
-#define PUMP_FREQUENCY (5000)           //frequency in Hertz.
-#define PUMP_TIMER LEDC_TIMER_1
-#define PUMP_MODE LEDC_LOW_SPEED_MODE
-#define PUMP_OUTPUT_IO (14)             //output GPIO
-#define PUMP_CHANNEL LEDC_CHANNEL_1
-#define PUMP_DUTY_RES LEDC_TIMER_13_BIT //duty resolution to 13 bits
-
 float LED_RED_PERCENT = 0;
 #define LED_RED_DUTY (4095)                 //start duty 50%. ((2 ** 13) - 1) * 50% = 4095
 #define LED_RED_FREQUENCY (1000)              //frequency in Hertz.
 #define LED_RED_TIMER LEDC_TIMER_2
 #define LED_RED_MODE LEDC_HIGH_SPEED_MODE
-#define LED_RED_OUTPUT_IO (16)              //output GPIO
+#define LED_RED_OUTPUT_IO (18)              //output GPIO
 #define LED_RED_CHANNEL LEDC_CHANNEL_2
 #define LED_RED_DUTY_RES LEDC_TIMER_13_BIT  //duty resolution to 13 bits
 
@@ -34,10 +25,27 @@ float LED_BLUE_PERCENT = 0;
 #define LED_BLUE_FREQUENCY (1000)              //frequency in Hertz.
 #define LED_BLUE_TIMER LEDC_TIMER_3
 #define LED_BLUE_MODE LEDC_HIGH_SPEED_MODE
-#define LED_BLUE_OUTPUT_IO (17)              //output GPIO
+#define LED_BLUE_OUTPUT_IO (19)              //output GPIO
 #define LED_BLUE_CHANNEL LEDC_CHANNEL_3
 #define LED_BLUE_DUTY_RES LEDC_TIMER_13_BIT  //duty resolution to 13 bits
 
+float PUMP_PERCENT = 0;
+#define PUMP_DUTY (2700)                //start duty of pump
+#define PUMP_FREQUENCY (5000)           //frequency in Hertz.
+#define PUMP_TIMER LEDC_TIMER_1
+#define PUMP_MODE LEDC_LOW_SPEED_MODE
+#define PUMP_OUTPUT_IO (17)             //output GPIO
+#define PUMP_CHANNEL LEDC_CHANNEL_1
+#define PUMP_DUTY_RES LEDC_TIMER_13_BIT //duty resolution to 13 bits
+
+float PUMP_REFILL_PERCENT = 0;
+#define PUMP_REFILL_DUTY (2700)                //start duty of pump
+#define PUMP_REFILL_FREQUENCY (5000)           //frequency in Hertz.
+#define PUMP_REFILL_TIMER LEDC_TIMER_1
+#define PUMP_REFILL_MODE LEDC_LOW_SPEED_MODE
+#define PUMP_REFILL_OUTPUT_IO (16)             //output GPIO
+#define PUMP_REFILL_CHANNEL LEDC_CHANNEL_1
+#define PUMP_REFILL_DUTY_RES LEDC_TIMER_13_BIT //duty resolution to 13 bits
 
 //initialize pwm (timer & channel) of fans based on FAN_* defines
 void init_fan()

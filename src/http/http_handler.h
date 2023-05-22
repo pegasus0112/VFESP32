@@ -17,3 +17,7 @@ esp_err_t post_led_duty_handler(httpd_req_t *req);
 
 //get handler for reading current sensor data & sending them as response
 esp_err_t get_sensor_data_handler(httpd_req_t *req);
+
+
+//do delta meassurement of red blue leds
+esp_err_t get_led_delta_calculation_handler(httpd_req_t *req);

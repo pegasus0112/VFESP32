@@ -77,17 +77,24 @@ void server_init() {
         .user_ctx = NULL
     };
 
-        httpd_uri_t uri_post_pump = {
+    httpd_uri_t uri_post_pump = {
         .uri = "/pump",
         .method = HTTP_POST,
         .handler = post_pump_duty_handler,
         .user_ctx = NULL
     };
 
-        httpd_uri_t uri_post_led = {
+    httpd_uri_t uri_post_led = {
         .uri = "/led",
         .method = HTTP_POST,
         .handler = post_led_duty_handler,
+        .user_ctx = NULL
+    };
+
+    httpd_uri_t uri_post_delta = {
+        .uri = "/delta",
+        .method = HTTP_GET,
+        .handler = get_led_delta_calculation_handler,
         .user_ctx = NULL
     };
 
@@ -96,6 +103,7 @@ void server_init() {
     httpd_register_uri_handler(server_handle, &uri_post_fan);
     httpd_register_uri_handler(server_handle, &uri_post_pump);
     httpd_register_uri_handler(server_handle, &uri_post_led);
+    httpd_register_uri_handler(server_handle, &uri_post_delta);
 };
 
 void networking_init() {

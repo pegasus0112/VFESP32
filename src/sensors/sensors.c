@@ -2,6 +2,9 @@
 #include "sensors/bh1750.h"
 #include "sensors/hcsr04.h"
 
+//read bh1750 for why delay must be bigger 120ms
+#define DELAY_BETWEEN_MEASSURE 150
+
 float BRIGHTNESS = -1.0f;
 float TEMPERATURE = -1.0f;
 float HUMIDITY = -1.0f;
