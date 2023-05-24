@@ -2,6 +2,7 @@
 #include "control/control.h"
 #include "sensors/sensors.h"
 #include "http/http_server.h"
+#include "nvs/nvs_handler.h"
 
 #include "esp_timer.h"
 #include "esp_err.h"
@@ -13,7 +14,7 @@ void timer_isr_regulation() {
 
 void app_main()
 {
-    nvs_flash_init();
+    init_nvs_storage();
     networking_init();
     pwm_init();
     init_sensors();
