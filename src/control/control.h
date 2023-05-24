@@ -8,7 +8,7 @@ extern float PUMP_PERCENT;
 
 extern float LED_RED_PERCENT;
 extern float LED_BLUE_PERCENT;
-#define LED_MIN (1000)                  //Minumum led duty
+#define LED_MIN (100)                  //Minumum led duty
 #define LED_MAX (8192)                  //Maximum led duty
 
 void pwm_init(void);
