@@ -6,6 +6,9 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include "regulation/regulation.h"
+#include "control/led_routine.h"
+#include "control/control.h"
 #include "nvs/nvs_handler.h"
 
 void init_nvs_storage()
@@ -18,7 +21,7 @@ void init_nvs_storage()
         err = nvs_flash_init();
     }
     ESP_ERROR_CHECK(err);
-};
+}
 
 int32_t read_int_from_storage_by_key(char *key)
 {
@@ -48,7 +51,7 @@ int32_t read_int_from_storage_by_key(char *key)
     }
     nvs_close(storage_handler);
     return int_value;
-};
+}
 
 void save_int_value_by_key(char *key, int32_t value)
 {
@@ -71,7 +74,7 @@ void save_int_value_by_key(char *key, int32_t value)
         printf("Error while nvs commit: %d", err);
     }
     nvs_close(storage_handler);
-};
+}
 
 void save_float_value_by_key(char *key, float value)
 {
@@ -99,7 +102,7 @@ void save_float_value_by_key(char *key, float value)
         printf("Error while nvs commit: %d", err);
     }
     nvs_close(storage_handler);
-};
+}
 
 float read_float_from_storage_by_key(char *key)
 {
@@ -132,4 +135,9 @@ float read_float_from_storage_by_key(char *key)
     }
     nvs_close(storage_handler);
     return 0;
-};
+}
+
+
+void read_all_saved_data_from_nvs() {
+    delta_leds = read_float_from_storage_by_key("delta_led");
+}

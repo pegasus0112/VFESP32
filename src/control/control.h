@@ -13,10 +13,15 @@ extern float LED_BLUE_PERCENT;
 
 void pwm_init(void);
 
+
+extern float blue_proportion_percent;
+
 char * change_duty_fan(int duty);
 char * change_duty_pump(int duty);
 char * change_duty_led_red(int duty);
 char * change_duty_led_blue(int duty);
+void update_proportion_led_blue_to_red();
+
 
 
 

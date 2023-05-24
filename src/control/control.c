@@ -11,8 +11,10 @@ float FAN_PERCENT;
 #define FAN_CHANNEL LEDC_CHANNEL_0
 #define FAN_DUTY_RES LEDC_TIMER_13_BIT  //duty resolution 13 bits
 
+float blue_proportion_percent = 50;
+
 float LED_RED_PERCENT = 0;
-#define LED_RED_DUTY (4095)                 //start duty 50%. ((2 ** 13) - 1) * 50% = 4095
+#define LED_RED_DUTY (2700)                 //start duty 50%. ((2 ** 13) - 1) * 50% = 4095
 #define LED_RED_FREQUENCY (1000)              //frequency in Hertz.
 #define LED_RED_TIMER LEDC_TIMER_2
 #define LED_RED_MODE LEDC_HIGH_SPEED_MODE
@@ -21,7 +23,7 @@ float LED_RED_PERCENT = 0;
 #define LED_RED_DUTY_RES LEDC_TIMER_13_BIT  //duty resolution to 13 bits
 
 float LED_BLUE_PERCENT = 0;
-#define LED_BLUE_DUTY (4095)                 //start duty 50%. ((2 ** 13) - 1) * 50% = 4095
+#define LED_BLUE_DUTY (2700)                 //start duty 50%. ((2 ** 13) - 1) * 50% = 4095
 #define LED_BLUE_FREQUENCY (1000)              //frequency in Hertz.
 #define LED_BLUE_TIMER LEDC_TIMER_3
 #define LED_BLUE_MODE LEDC_HIGH_SPEED_MODE
@@ -125,7 +127,7 @@ void init_led_red()
         };
     ESP_ERROR_CHECK(ledc_channel_config(&LED_channel_red));
 
-    LED_RED_PERCENT = remap_float_to_range(LED_RED_DUTY, 1, 100, LED_MIN, LED_MAX);
+    LED_RED_PERCENT = remap_float_to_range(LED_RED_DUTY, LED_MIN, LED_MAX, 1, 100);
 }
 
 void init_led_blue()
@@ -151,7 +153,7 @@ void init_led_blue()
         };
     ESP_ERROR_CHECK(ledc_channel_config(&LED_channel_blue));
 
-    LED_BLUE_PERCENT = remap_float_to_range(LED_BLUE_DUTY, 1, 100, LED_MIN, LED_MAX);
+    LED_BLUE_PERCENT = remap_float_to_range(LED_BLUE_DUTY, LED_MIN, LED_MAX, 1, 100);
 }
 
 // initialize & start pwm for fans, pumps & LEDs
@@ -272,8 +274,8 @@ char * change_duty_led_red(int duty)
         return "red leds off";
         } else
         {
-            LED_RED_PERCENT = remap_float_to_range(duty, 1, 100, LED_MIN, LED_MAX);
-            update_duty_led_red(LED_RED_PERCENT);
+            LED_RED_PERCENT = duty;
+            update_duty_led_red(remap_float_to_range(duty, 1, 100, LED_MIN, LED_MAX));
             return "red led duty updated";
     }
 }
@@ -295,8 +297,14 @@ char * change_duty_led_blue(int duty)
         return "blue leds off";
         } else
         {
-            LED_BLUE_PERCENT = remap_float_to_range(duty, 1, 100, LED_MIN, LED_MAX);
-            update_duty_led_blue(LED_BLUE_PERCENT);
+            LED_BLUE_PERCENT = duty;
+            update_duty_led_blue(remap_float_to_range(duty, 1, 100, LED_MIN, LED_MAX));
             return "blue led duty updated";
     }
+}
+
+//changing proportion of red : blue light in percent
+//25% means 25% strength of current red leds
+void update_proportion_led_blue_to_red() {
+change_duty_led_blue(LED_RED_PERCENT * (blue_proportion_percent/100)) ;
 }
