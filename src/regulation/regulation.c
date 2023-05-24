@@ -7,6 +7,7 @@
 
 #include "regulation.h"
 #include "control/control.h"
+#include "control/led_routine.h"
 #include "sensors/sensors.h"
 #include "sensors/bh1750.h"
 #include "nvs/nvs_handler.h"
@@ -60,9 +61,11 @@ void regulate_leds_based_on_light()
             new_led_percent = 1;
         }
     }
-
+    
+    printf("setting red value: %f!\n", new_led_percent);
     change_duty_led_red(new_led_percent);
-    update_proportion_led_blue_to_red();
+    printf("setting blue value: %f!\n", (new_led_percent - delta_leds) *(blue_proportion_percent/100));
+    change_duty_led_blue((new_led_percent - delta_leds) *(blue_proportion_percent/100));
 
     printf("Current Percent: %f\n", LED_RED_PERCENT);
 

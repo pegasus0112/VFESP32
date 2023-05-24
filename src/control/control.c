@@ -2,6 +2,7 @@
 #include "driver/ledc.h"
 #include "utils.h"
 
+
 float FAN_PERCENT;
 #define FAN_DUTY (1000)                 //start duty of fan
 #define FAN_FREQUENCY (10)              //frequency in Hertz.
@@ -11,23 +12,23 @@ float FAN_PERCENT;
 #define FAN_CHANNEL LEDC_CHANNEL_0
 #define FAN_DUTY_RES LEDC_TIMER_13_BIT  //duty resolution 13 bits
 
-float blue_proportion_percent = 50;
+float blue_proportion_percent = 25;
 
 float LED_RED_PERCENT = 0;
-#define LED_RED_DUTY (2700)                 //start duty 50%. ((2 ** 13) - 1) * 50% = 4095
+#define LED_RED_DUTY (LED_MIN)                 //start duty 50%. ((2 ** 13) - 1) * 50% = 4095
 #define LED_RED_FREQUENCY (1000)              //frequency in Hertz.
 #define LED_RED_TIMER LEDC_TIMER_2
 #define LED_RED_MODE LEDC_HIGH_SPEED_MODE
-#define LED_RED_OUTPUT_IO (18)              //output GPIO
+#define LED_RED_OUTPUT_IO (19)              //output GPIO
 #define LED_RED_CHANNEL LEDC_CHANNEL_2
 #define LED_RED_DUTY_RES LEDC_TIMER_13_BIT  //duty resolution to 13 bits
 
 float LED_BLUE_PERCENT = 0;
-#define LED_BLUE_DUTY (2700)                 //start duty 50%. ((2 ** 13) - 1) * 50% = 4095
+#define LED_BLUE_DUTY (LED_MIN)                 //start duty 50%. ((2 ** 13) - 1) * 50% = 4095
 #define LED_BLUE_FREQUENCY (1000)              //frequency in Hertz.
 #define LED_BLUE_TIMER LEDC_TIMER_3
 #define LED_BLUE_MODE LEDC_HIGH_SPEED_MODE
-#define LED_BLUE_OUTPUT_IO (19)              //output GPIO
+#define LED_BLUE_OUTPUT_IO (18)              //output GPIO
 #define LED_BLUE_CHANNEL LEDC_CHANNEL_3
 #define LED_BLUE_DUTY_RES LEDC_TIMER_13_BIT  //duty resolution to 13 bits
 
@@ -208,11 +209,7 @@ void update_duty_led_blue(int duty)
 //return string of methode executed state
 char * change_duty_fan(int duty) 
 {
-    if (duty < 0)
-    {
-        return "set fan duty not between 0-100";
-    }
-    
+
     if (duty > 100)
     {
         FAN_PERCENT = 100;
@@ -220,7 +217,7 @@ char * change_duty_fan(int duty)
         return "set fan duty to max";
     }
 
-    if (duty == 0)
+    if (duty <= 0)
     {
         FAN_PERCENT = 0;
 
@@ -238,12 +235,12 @@ char * change_duty_fan(int duty)
 //return string of methode executed state
 char * change_duty_pump(int duty) 
 {
-    if (duty > 100 || duty < 0)
+    if (duty > 100)
     {
-        return "set pump duty not between 0-100";
-        }
-
-    if (duty == 0)
+        duty = 100;
+    }
+    
+    if (duty <= 0)
     {
         PUMP_PERCENT = 0;
 
@@ -261,22 +258,22 @@ char * change_duty_pump(int duty)
 //return string of methode executed state
 char * change_duty_led_red(int duty) 
 {
-    if (duty > 100 || duty < 0)
+    if (duty > 100)
     {
-        return "set red led duty not between 0-100";
-        }
-
-    if (duty == 0)
+        duty = 100;
+    }
+    
+    if (duty <= 0)
     {
         LED_RED_PERCENT = 0;
 
         update_duty_led_red(0);
         return "red leds off";
-        } else
-        {
-            LED_RED_PERCENT = duty;
-            update_duty_led_red(remap_float_to_range(duty, 1, 100, LED_MIN, LED_MAX));
-            return "red led duty updated";
+    }else
+    {
+        LED_RED_PERCENT = duty;
+        update_duty_led_red(remap_float_to_range(duty, 1, 100, LED_MIN, LED_MAX));
+        return "red led duty updated";
     }
 }
 
@@ -284,27 +281,21 @@ char * change_duty_led_red(int duty)
 //return string of methode executed state
 char * change_duty_led_blue(int duty) 
 {
-    if (duty > 100 || duty < 0)
+    if (duty > 100)
     {
-        return "set blue led duty not between 0-100";
-        }
-
-    if (duty == 0)
+        duty = 100;
+    }
+    
+    if (duty <= 0)
     {
         LED_BLUE_PERCENT = 0;
 
         update_duty_led_blue(0);
         return "blue leds off";
-        } else
-        {
-            LED_BLUE_PERCENT = duty;
-            update_duty_led_blue(remap_float_to_range(duty, 1, 100, LED_MIN, LED_MAX));
-            return "blue led duty updated";
+    } else
+    {
+        LED_BLUE_PERCENT = duty;
+        update_duty_led_blue(remap_float_to_range(duty, 1, 100, LED_MIN, LED_MAX));
+        return "blue led duty updated";
     }
-}
-
-//changing proportion of red : blue light in percent
-//25% means 25% strength of current red leds
-void update_proportion_led_blue_to_red() {
-change_duty_led_blue(LED_RED_PERCENT * (blue_proportion_percent/100)) ;
 }
