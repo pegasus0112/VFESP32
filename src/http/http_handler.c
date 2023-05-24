@@ -5,6 +5,7 @@
 #include "sensors/sensors.h"
 #include "control/led_routine.h"
 #include "nvs/nvs_handler.h"
+#include "regulation/regulation.h"
 
 esp_err_t post_fan_duty_handler(httpd_req_t *req) {
     char req_body[20];
@@ -46,6 +47,9 @@ esp_err_t get_sensor_data_handler(httpd_req_t *req) {
 };
 
 esp_err_t get_led_delta_calculation_handler(httpd_req_t *req) {
+    //disable regulation so testing does not influence it
+    current_state = MEASURING;
+
     //first send response, because measurement takes time
     httpd_resp_send(req, "starting delta measurement", HTTPD_RESP_USE_STRLEN);
 
@@ -59,5 +63,6 @@ esp_err_t get_led_delta_calculation_handler(httpd_req_t *req) {
     printf("getting new value: %f\n", delta );
     printf("new delta: %f\n", read_float_from_storage_by_key("delta_led"));
 
+    current_state = OK;
     return ESP_OK;
 };
