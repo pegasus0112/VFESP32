@@ -15,11 +15,26 @@
 
 state current_state = STARTING;
 
+//wished led strength
 int specified_led_strength = 3000;
 
+/**
+ * deviation because regulate_leds_based_on_light() will never reach exact specified_led_strength value
+ * regualtion based on approximation to specified_led_strength +- deviation
+*/
 int leds_allowed_deviation = 15;
+
+/**
+ * multiplier for led strength change
+ * led sterngth change is thereby potentially and not linearly
+*/
 float led_multiplier = 1;
 
+/**
+ * regulating red & blue leds
+ * light sensor read current strength of light and changes
+ * strength of leds so it comes close to specified_led_strength
+*/
 void regulate_leds_based_on_light()
 {
     printf("checking brightness: %f \n", BRIGHTNESS);
@@ -80,6 +95,7 @@ void regulate_leds_based_on_light()
     }
 }
 
+//WILL BE REMOVED
 void regulate_fan_based_on_light()
 {
     printf("brightness: %f \n", BRIGHTNESS);
@@ -90,6 +106,9 @@ void regulate_fan_based_on_temperature(){
     // TODO
 }
 
+/**
+ * regulation for activating refill water pump if water level is too low
+*/
 void regulate_refill_pump_based_on_ultrasonic(){
     // TODO
 }
@@ -98,21 +117,19 @@ void regulate()
 {
     switch (current_state)
     {
-    case STARTING:
-        read_all_saved_data_from_nvs();
-        networking_init();
-        pwm_init();
-        init_sensors();
-        current_state = OK;
-        break;
-    case MEASURING:
-        break;
-    case REGULATE:
-        break;
-    case OK:
-        read_allSensor_Data();
-        regulate_leds_based_on_light();
-        regulate_fan_based_on_light();
-        break;
+        case STARTING:
+            read_all_saved_data_from_nvs();
+            networking_init();
+            pwm_init();
+            init_sensors();
+            current_state = OK;
+            break;
+        case MEASURING:
+            break;
+        case OK:
+            read_allSensor_Data();
+            regulate_leds_based_on_light();
+            regulate_fan_based_on_light();
+            break;
     }
 }

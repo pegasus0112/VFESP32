@@ -15,7 +15,7 @@ char * get_string_from_Json(char* json_string, char* key) {
     return cJSON_Print(bfound);
 }
 
-char* get_sensor_status_as_json_string() {
+char* get_farm_status_as_json_string() {
     cJSON *data = cJSON_CreateObject();
 
     cJSON *sensors = cJSON_CreateObject();

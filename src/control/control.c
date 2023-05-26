@@ -205,8 +205,6 @@ void update_duty_led_blue(int duty)
     ledc_update_duty(LED_BLUE_MODE, LED_BLUE_CHANNEL);
 }
 
-//parameter is percentual power of fan
-//return string of methode executed state
 char * change_duty_fan(int duty) 
 {
 
@@ -231,8 +229,6 @@ char * change_duty_fan(int duty)
     }
 }
 
-//parameter is percentual power of pump
-//return string of methode executed state
 char * change_duty_pump(int duty) 
 {
     if (duty > 100)
@@ -254,8 +250,6 @@ char * change_duty_pump(int duty)
     }
 }
 
-//parameter is percentual power of red led
-//return string of methode executed state
 char * change_duty_led_red(int duty) 
 {
     if (duty > 100)
@@ -277,8 +271,6 @@ char * change_duty_led_red(int duty)
     }
 }
 
-//parameter is percentual power of blue led
-//return string of methode executed state
 char * change_duty_led_blue(int duty) 
 {
     if (duty > 100)

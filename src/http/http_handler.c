@@ -28,7 +28,7 @@ esp_err_t post_pump_duty_handler(httpd_req_t *req) {
 esp_err_t get_sensor_data_handler(httpd_req_t *req) {
     read_allSensor_Data();
     httpd_resp_set_type(req, HTTPD_TYPE_JSON);
-    httpd_resp_send(req, get_sensor_status_as_json_string(), HTTPD_RESP_USE_STRLEN);
+    httpd_resp_send(req, get_farm_status_as_json_string(), HTTPD_RESP_USE_STRLEN);
     return ESP_OK;
 };
 
@@ -52,7 +52,6 @@ esp_err_t get_led_delta_calculation_handler(httpd_req_t *req) {
     current_state = OK;
     return ESP_OK;
 };
-
 
 esp_err_t post_led_strength_handler(httpd_req_t *req) {
     char req_body[20];

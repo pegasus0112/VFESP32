@@ -7,6 +7,10 @@
 #include "loginData.h"
 #include "http_handler.h"
 
+/**
+ * event-handler for WIFI_EVENT & IP_EVENT events
+ * checking and printing state of connection
+*/
 void wifi_event_handler(void *event_handler_arg, esp_event_base_t event_base, int32_t event_id, void *event_data) {
     printf("checking wifi status... \n");
     switch (event_id)
@@ -18,8 +22,6 @@ void wifi_event_handler(void *event_handler_arg, esp_event_base_t event_base, in
             printf("connected \n");
             break;
         case WIFI_EVENT_STA_DISCONNECTED:
-            //esp_sleep_enable_timer_wakeup(20000000);
-            //esp_light_sleep_start();
             printf("Retry connecting....\n");
             esp_wifi_connect();
             break;
@@ -34,6 +36,11 @@ void wifi_event_handler(void *event_handler_arg, esp_event_base_t event_base, in
     }
 };
 
+/**
+ * initializing wifi in station-mode
+ * registering eventhandler
+ * is using login data from loginData.h file
+*/
 void wifi_init() {
     esp_netif_init();
     esp_event_loop_create_default();
@@ -59,6 +66,10 @@ void wifi_init() {
     esp_wifi_connect();
 };
 
+/**
+ * starting httpd-server
+ * registering URIs & handlers
+*/
 void server_init() {
     httpd_config_t server_config = HTTPD_DEFAULT_CONFIG();
     httpd_handle_t server_handle = NULL;

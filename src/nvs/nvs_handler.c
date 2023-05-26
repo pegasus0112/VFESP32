@@ -137,7 +137,6 @@ float read_float_from_storage_by_key(char *key)
     return 0;
 }
 
-
 void read_all_saved_data_from_nvs() {
     delta_leds = read_float_from_storage_by_key("delta_led");
     printf("loaded delta_leds = %f from NVS\n", delta_leds);

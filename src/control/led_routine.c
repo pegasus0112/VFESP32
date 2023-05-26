@@ -13,9 +13,12 @@ float delta_leds = 0;
 
 float meassure_led_delta() {
     float new_delta = 0;
+
+    //powering off leds before test
     change_duty_led_red(0);
     change_duty_led_blue(0);
 
+    //do strength delta test for every percent and adding it to new_delta
     for (int i = 1; i < 101; i++)
     {
         change_duty_led_red(i);
@@ -35,9 +38,12 @@ float meassure_led_delta() {
         new_delta += (100/blue_lux)*red_lux -100;
     }
 
+    //after changing strength for testing, setting leds strength to lowest
     change_duty_led_red(1);
     change_duty_led_blue(1);
 
+    //new_delta is in percent
+    // 100 values added in new_delta, divede by 100 to get average
     new_delta = new_delta / 100;
 
     printf("new delta: %f\n", new_delta);

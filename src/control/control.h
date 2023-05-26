@@ -15,12 +15,29 @@ void pwm_init(void);
 
 
 extern float blue_proportion_percent;
-
+/**
+ * parameter is percentual power of fan
+ * return string of methode executed state
+*/
 char * change_duty_fan(int duty);
+
+/**
+ * parameter is percentual power of pump 
+ * return string of methode executed state
+ */
 char * change_duty_pump(int duty);
+
+/**
+ * parameter is percentual power of red led
+ * return string of methode executed state
+*/
 char * change_duty_led_red(int duty);
+
+/**
+ * parameter is percentual power of blue led
+ * return string of methode executed state
+*/
 char * change_duty_led_blue(int duty);
-void update_proportion_led_blue_to_red();
 
 
 
