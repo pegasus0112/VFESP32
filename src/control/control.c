@@ -2,58 +2,57 @@
 #include "driver/ledc.h"
 #include "utils.h"
 
-
 float FAN_PERCENT;
-#define FAN_DUTY (1000)                 //start duty of fan
-#define FAN_FREQUENCY (10)              //frequency in Hertz.
+#define FAN_DUTY (1000)    // start duty of fan
+#define FAN_FREQUENCY (10) // frequency in Hertz.
 #define FAN_TIMER LEDC_TIMER_0
 #define FAN_MODE LEDC_LOW_SPEED_MODE
-#define FAN_OUTPUT_IO (5)               //output GPIO
+#define FAN_OUTPUT_IO (5) // output GPIO
 #define FAN_CHANNEL LEDC_CHANNEL_0
-#define FAN_DUTY_RES LEDC_TIMER_13_BIT  //duty resolution 13 bits
+#define FAN_DUTY_RES LEDC_TIMER_13_BIT // duty resolution 13 bits
 
 float blue_proportion_percent = 25;
 
 float LED_RED_PERCENT = 0;
-#define LED_RED_DUTY (LED_MIN)                 //start duty 50%. ((2 ** 13) - 1) * 50% = 4095
-#define LED_RED_FREQUENCY (1000)              //frequency in Hertz.
+#define LED_RED_DUTY (LED_MIN)   // start duty 50%. ((2 ** 13) - 1) * 50% = 4095
+#define LED_RED_FREQUENCY (1000) // frequency in Hertz.
 #define LED_RED_TIMER LEDC_TIMER_2
 #define LED_RED_MODE LEDC_HIGH_SPEED_MODE
-#define LED_RED_OUTPUT_IO (19)              //output GPIO
+#define LED_RED_OUTPUT_IO (19) // output GPIO
 #define LED_RED_CHANNEL LEDC_CHANNEL_2
-#define LED_RED_DUTY_RES LEDC_TIMER_13_BIT  //duty resolution to 13 bits
+#define LED_RED_DUTY_RES LEDC_TIMER_13_BIT // duty resolution to 13 bits
 
 float LED_BLUE_PERCENT = 0;
-#define LED_BLUE_DUTY (LED_MIN)                 //start duty 50%. ((2 ** 13) - 1) * 50% = 4095
-#define LED_BLUE_FREQUENCY (1000)              //frequency in Hertz.
+#define LED_BLUE_DUTY (LED_MIN)   // start duty 50%. ((2 ** 13) - 1) * 50% = 4095
+#define LED_BLUE_FREQUENCY (1000) // frequency in Hertz.
 #define LED_BLUE_TIMER LEDC_TIMER_3
 #define LED_BLUE_MODE LEDC_HIGH_SPEED_MODE
-#define LED_BLUE_OUTPUT_IO (18)              //output GPIO
+#define LED_BLUE_OUTPUT_IO (18) // output GPIO
 #define LED_BLUE_CHANNEL LEDC_CHANNEL_3
-#define LED_BLUE_DUTY_RES LEDC_TIMER_13_BIT  //duty resolution to 13 bits
+#define LED_BLUE_DUTY_RES LEDC_TIMER_13_BIT // duty resolution to 13 bits
 
 float PUMP_PERCENT = 0;
-#define PUMP_DUTY (2700)                //start duty of pump
-#define PUMP_FREQUENCY (5000)           //frequency in Hertz.
+#define PUMP_DUTY (2700)      // start duty of pump
+#define PUMP_FREQUENCY (5000) // frequency in Hertz.
 #define PUMP_TIMER LEDC_TIMER_1
 #define PUMP_MODE LEDC_LOW_SPEED_MODE
-#define PUMP_OUTPUT_IO (17)             //output GPIO
+#define PUMP_OUTPUT_IO (17) // output GPIO
 #define PUMP_CHANNEL LEDC_CHANNEL_1
-#define PUMP_DUTY_RES LEDC_TIMER_13_BIT //duty resolution to 13 bits
+#define PUMP_DUTY_RES LEDC_TIMER_13_BIT // duty resolution to 13 bits
 
-float PUMP_REFILL_PERCENT = 0;
-#define PUMP_REFILL_DUTY (2700)                //start duty of pump
-#define PUMP_REFILL_FREQUENCY (5000)           //frequency in Hertz.
+bool PUMP_REFILL_ON = false;
+#define PUMP_REFILL_DUTY (2700)      // duty of pump IF on, NOT START
+#define PUMP_REFILL_FREQUENCY (5000) // frequency in Hertz.
 #define PUMP_REFILL_TIMER LEDC_TIMER_1
 #define PUMP_REFILL_MODE LEDC_LOW_SPEED_MODE
-#define PUMP_REFILL_OUTPUT_IO (16)             //output GPIO
+#define PUMP_REFILL_OUTPUT_IO (16) // output GPIO
 #define PUMP_REFILL_CHANNEL LEDC_CHANNEL_1
-#define PUMP_REFILL_DUTY_RES LEDC_TIMER_13_BIT //duty resolution to 13 bits
+#define PUMP_REFILL_DUTY_RES LEDC_TIMER_13_BIT // duty resolution to 13 bits
 
-//initialize pwm (timer & channel) of fans based on FAN_* defines
+// initialize pwm (timer & channel) of fans based on FAN_* defines
 void init_fan()
 {
-    //prepare, then apply FAN PWM timer configuration
+    // prepare, then apply FAN PWM timer configuration
     ledc_timer_config_t fan_timer = {
         .speed_mode = FAN_MODE,
         .duty_resolution = FAN_DUTY_RES,
@@ -70,17 +69,16 @@ void init_fan()
         .intr_type = LEDC_INTR_DISABLE,
         .timer_sel = FAN_TIMER,
         .duty = FAN_DUTY,
-        .hpoint = 0
-        };
+        .hpoint = 0};
     ESP_ERROR_CHECK(ledc_channel_config(&fan_channel));
 
     FAN_PERCENT = remap_float_to_range(FAN_DUTY, 1, 100, FAN_MIN, FAN_MAX);
 }
 
-//initialize pwm (timer & channel) of pumps based on PUMP_* defines
+// initialize pwm (timer & channel) of pumps based on PUMP_* defines
 void init_pump()
 {
-    //prepare, then apply PUMP PWM timer configuration
+    // prepare, then apply PUMP PWM timer configuration
     ledc_timer_config_t PUMP_timer = {
         .speed_mode = PUMP_MODE,
         .duty_resolution = PUMP_DUTY_RES,
@@ -89,7 +87,7 @@ void init_pump()
         .clk_cfg = LEDC_AUTO_CLK};
     ESP_ERROR_CHECK(ledc_timer_config(&PUMP_timer));
 
-// Prepare,then apply PUMP PWM channel configuration
+    // Prepare,then apply PUMP PWM channel configuration
     ledc_channel_config_t PUMP_channel = {
         .gpio_num = PUMP_OUTPUT_IO,
         .speed_mode = PUMP_MODE,
@@ -97,17 +95,41 @@ void init_pump()
         .intr_type = LEDC_INTR_DISABLE,
         .timer_sel = PUMP_TIMER,
         .duty = PUMP_DUTY,
-        .hpoint = 0
-        };
+        .hpoint = 0};
     ESP_ERROR_CHECK(ledc_channel_config(&PUMP_channel));
 
     PUMP_PERCENT = remap_float_to_range(PUMP_DUTY, 1, 100, PUMP_MIN, PUMP_MAX);
 }
 
-//initialize pwm (timer & channel) of LEDs based on LED_* defines
+// initialize pwm (timer & channel) of pumps based on PUMP_REFILL_* defines
+// IMPORTANT: default is off (duty = 0)
+void init_pump_refill()
+{
+    // prepare, then apply PUMP PWM timer configuration
+    ledc_timer_config_t PUMP_REFILL_timer = {
+        .speed_mode = PUMP_REFILL_MODE,
+        .duty_resolution = PUMP_REFILL_DUTY_RES,
+        .timer_num = PUMP_REFILL_TIMER,
+        .freq_hz = PUMP_REFILL_FREQUENCY,
+        .clk_cfg = LEDC_AUTO_CLK};
+    ESP_ERROR_CHECK(ledc_timer_config(&PUMP_REFILL_timer));
+
+    // Prepare,then apply PUMP PWM channel configuration
+    ledc_channel_config_t PUMP_REFILL_channel = {
+        .gpio_num = PUMP_REFILL_OUTPUT_IO,
+        .speed_mode = PUMP_REFILL_MODE,
+        .channel = PUMP_REFILL_CHANNEL,
+        .intr_type = LEDC_INTR_DISABLE,
+        .timer_sel = PUMP_REFILL_TIMER,
+        .duty = 0,
+        .hpoint = 0};
+    ESP_ERROR_CHECK(ledc_channel_config(&PUMP_REFILL_channel));
+}
+
+// initialize pwm (timer & channel) of LEDs based on LED_* defines
 void init_led_red()
 {
-    //prepare, then apply LED PWM timer configuration
+    // prepare, then apply LED PWM timer configuration
     ledc_timer_config_t LED_timer_red = {
         .speed_mode = LED_RED_MODE,
         .duty_resolution = LED_RED_DUTY_RES,
@@ -124,8 +146,7 @@ void init_led_red()
         .intr_type = LEDC_INTR_DISABLE,
         .timer_sel = LED_RED_TIMER,
         .duty = LED_RED_DUTY,
-        .hpoint = 0
-        };
+        .hpoint = 0};
     ESP_ERROR_CHECK(ledc_channel_config(&LED_channel_red));
 
     LED_RED_PERCENT = remap_float_to_range(LED_RED_DUTY, LED_MIN, LED_MAX, 1, 100);
@@ -133,7 +154,7 @@ void init_led_red()
 
 void init_led_blue()
 {
-    //prepare, then apply LED PWM timer configuration
+    // prepare, then apply LED PWM timer configuration
     ledc_timer_config_t LED_timer_blue = {
         .speed_mode = LED_BLUE_MODE,
         .duty_resolution = LED_BLUE_DUTY_RES,
@@ -150,8 +171,7 @@ void init_led_blue()
         .intr_type = LEDC_INTR_DISABLE,
         .timer_sel = LED_BLUE_TIMER,
         .duty = LED_BLUE_DUTY,
-        .hpoint = 0
-        };
+        .hpoint = 0};
     ESP_ERROR_CHECK(ledc_channel_config(&LED_channel_blue));
 
     LED_BLUE_PERCENT = remap_float_to_range(LED_BLUE_DUTY, LED_MIN, LED_MAX, 1, 100);
@@ -160,16 +180,38 @@ void init_led_blue()
 // initialize & start pwm for fans, pumps & LEDs
 void pwm_init(void)
 {
-    //initialize & start fan pwm
+    // initialize & start fan pwm
     init_fan();
-    //initialize & start pump pwm
+    // initialize & start pump pwm
     init_pump();
-    //initialize & start led pwm
+    // initialize & start led pwm
     init_led_red();
     init_led_blue();
+    // initialize refill pump
+    init_pump_refill();
 }
 
-//change fan duty and update pwm channel
+void set_state_pump_refill(bool pump_enabled)
+{
+    if (pump_enabled)
+    {
+        // change duty settings of refill pump == enabling it
+        ledc_set_duty(PUMP_REFILL_MODE, PUMP_REFILL_CHANNEL, PUMP_REFILL_DUTY);
+        // update duty to apply the new value
+        ledc_update_duty(PUMP_REFILL_MODE, PUMP_REFILL_CHANNEL);
+    }
+    else
+    {
+        // change duty settings of refill pump == disabling it
+        ledc_set_duty(PUMP_REFILL_MODE, PUMP_REFILL_CHANNEL, 0);
+        // update duty to apply the new value
+        ledc_update_duty(PUMP_REFILL_MODE, PUMP_REFILL_CHANNEL);
+    }
+
+    PUMP_REFILL_ON = pump_enabled;
+}
+
+// change fan duty and update pwm channel
 void update_duty_fan(int duty)
 {
     // change duty settings of fan
@@ -178,7 +220,7 @@ void update_duty_fan(int duty)
     ledc_update_duty(FAN_MODE, FAN_CHANNEL);
 }
 
-//change pump duty and update pwm channel
+// change pump duty and update pwm channel
 void update_duty_pump(int duty)
 {
     // change duty settings of pump
@@ -187,7 +229,7 @@ void update_duty_pump(int duty)
     ledc_update_duty(PUMP_MODE, PUMP_CHANNEL);
 }
 
-//change red led duty and update pwm channel
+// change red led duty and update pwm channel
 void update_duty_led_red(int duty)
 {
     // change duty settings of öed
@@ -196,7 +238,7 @@ void update_duty_led_red(int duty)
     ledc_update_duty(LED_RED_MODE, LED_RED_CHANNEL);
 }
 
-//change blue led duty and update pwm channel
+// change blue led duty and update pwm channel
 void update_duty_led_blue(int duty)
 {
     // change duty settings of led
@@ -205,7 +247,7 @@ void update_duty_led_blue(int duty)
     ledc_update_duty(LED_BLUE_MODE, LED_BLUE_CHANNEL);
 }
 
-char * change_duty_fan(int duty) 
+char *change_duty_fan(int duty)
 {
 
     if (duty > 100)
@@ -221,49 +263,52 @@ char * change_duty_fan(int duty)
 
         update_duty_fan(0);
         return "fans off";
-        } else
-        {
-            FAN_PERCENT= remap_float_to_range(duty, 1, 100, FAN_MIN, FAN_MAX);            
-            update_duty_fan(FAN_PERCENT);
-            return "fan duty updated";
+    }
+    else
+    {
+        FAN_PERCENT = remap_float_to_range(duty, 1, 100, FAN_MIN, FAN_MAX);
+        update_duty_fan(FAN_PERCENT);
+        return "fan duty updated";
     }
 }
 
-char * change_duty_pump(int duty) 
+char *change_duty_pump(int duty)
 {
     if (duty > 100)
     {
         duty = 100;
     }
-    
+
     if (duty <= 0)
     {
         PUMP_PERCENT = 0;
 
         update_duty_pump(0);
         return "pump off";
-        } else
-        {
-            PUMP_PERCENT = remap_float_to_range(duty, 1, 100, PUMP_MIN, PUMP_MAX);            
-            update_duty_pump(PUMP_PERCENT);
-            return "pump duty updated";
+    }
+    else
+    {
+        PUMP_PERCENT = remap_float_to_range(duty, 1, 100, PUMP_MIN, PUMP_MAX);
+        update_duty_pump(PUMP_PERCENT);
+        return "pump duty updated";
     }
 }
 
-char * change_duty_led_red(int duty) 
+char *change_duty_led_red(int duty)
 {
     if (duty > 100)
     {
         duty = 100;
     }
-    
+
     if (duty <= 0)
     {
         LED_RED_PERCENT = 0;
 
         update_duty_led_red(0);
         return "red leds off";
-    }else
+    }
+    else
     {
         LED_RED_PERCENT = duty;
         update_duty_led_red(remap_float_to_range(duty, 1, 100, LED_MIN, LED_MAX));
@@ -271,20 +316,21 @@ char * change_duty_led_red(int duty)
     }
 }
 
-char * change_duty_led_blue(int duty) 
+char *change_duty_led_blue(int duty)
 {
     if (duty > 100)
     {
         duty = 100;
     }
-    
+
     if (duty <= 0)
     {
         LED_BLUE_PERCENT = 0;
 
         update_duty_led_blue(0);
         return "blue leds off";
-    } else
+    }
+    else
     {
         LED_BLUE_PERCENT = duty;
         update_duty_led_blue(remap_float_to_range(duty, 1, 100, LED_MIN, LED_MAX));

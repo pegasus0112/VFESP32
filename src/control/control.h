@@ -11,6 +11,8 @@ extern float LED_BLUE_PERCENT;
 #define LED_MIN (100)                  //Minumum led duty
 #define LED_MAX (8192)                  //Maximum led duty
 
+extern bool PUMP_REFILL_ON;
+
 void pwm_init(void);
 
 
@@ -39,6 +41,10 @@ char * change_duty_led_red(int duty);
 */
 char * change_duty_led_blue(int duty);
 
-
+/**
+ * enabling or disabling refill pump, based on bool
+ * true == on
+ */
+void set_state_pump_refill(bool pump_enabled);
 
 

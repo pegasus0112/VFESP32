@@ -15,26 +15,30 @@
 
 state current_state = STARTING;
 
-//wished led strength
+min_water_level = 10;
+
+max_water_level = 20;
+
+// wished led strength
 int specified_led_strength = 3000;
 
 /**
  * deviation because regulate_leds_based_on_light() will never reach exact specified_led_strength value
  * regualtion based on approximation to specified_led_strength +- deviation
-*/
+ */
 int leds_allowed_deviation = 15;
 
 /**
  * multiplier for led strength change
  * led sterngth change is thereby potentially and not linearly
-*/
+ */
 float led_multiplier = 1;
 
 /**
  * regulating red & blue leds
  * light sensor read current strength of light and changes
  * strength of leds so it comes close to specified_led_strength
-*/
+ */
 void regulate_leds_based_on_light()
 {
     printf("checking brightness: %f \n", BRIGHTNESS);
@@ -76,11 +80,11 @@ void regulate_leds_based_on_light()
             new_led_percent = 1;
         }
     }
-    
+
     printf("setting red value: %f!\n", new_led_percent);
     change_duty_led_red(new_led_percent);
-    printf("setting blue value: %f!\n", (new_led_percent - delta_leds) *(blue_proportion_percent/100));
-    change_duty_led_blue((new_led_percent - delta_leds) *(blue_proportion_percent/100));
+    printf("setting blue value: %f!\n", (new_led_percent - delta_leds) * (blue_proportion_percent / 100));
+    change_duty_led_blue((new_led_percent - delta_leds) * (blue_proportion_percent / 100));
 
     printf("Current Percent: %f\n", LED_RED_PERCENT);
 
@@ -95,41 +99,53 @@ void regulate_leds_based_on_light()
     }
 }
 
-//WILL BE REMOVED
+// WILL BE REMOVED
 void regulate_fan_based_on_light()
 {
     printf("brightness: %f \n", BRIGHTNESS);
     change_duty_fan(remap_float_to_range(BRIGHTNESS, 0, 1000, 0, 100));
 }
 
-void regulate_fan_based_on_temperature(){
+void regulate_fan_based_on_temperature()
+{
     // TODO
 }
 
 /**
  * regulation for activating refill water pump if water level is too low
-*/
-void regulate_refill_pump_based_on_ultrasonic(){
-    // TODO
+ * deactivate if it reaches the max_water_level
+ */
+void regulate_refill_pump_based_on_ultrasonic_distance()
+{
+
+    if (!PUMP_REFILL_ON && WATER_DISTANCE <= min_water_level)
+    {
+        set_state_pump_refill(true);
+    }
+    else if (PUMP_REFILL_ON && WATER_DISTANCE >= max_water_level)
+    {
+        set_state_pump_refill(false);
+    }
 }
 
 void regulate()
 {
     switch (current_state)
     {
-        case STARTING:
-            read_all_saved_data_from_nvs();
-            networking_init();
-            pwm_init();
-            init_sensors();
-            current_state = OK;
-            break;
-        case MEASURING:
-            break;
-        case OK:
-            read_allSensor_Data();
-            regulate_leds_based_on_light();
-            regulate_fan_based_on_light();
-            break;
+    case STARTING:
+        read_all_saved_data_from_nvs();
+        networking_init();
+        pwm_init();
+        init_sensors();
+        current_state = OK;
+        break;
+    case MEASURING:
+        break;
+    case OK:
+        read_allSensor_Data();
+        regulate_leds_based_on_light();
+        regulate_fan_based_on_light();
+        regulate_refill_pump_based_on_ultrasonic_distance();
+        break;
     }
 }
