@@ -63,6 +63,42 @@ esp_err_t post_led_strength_handler(httpd_req_t *req) {
 
     specified_led_strength = atof(req_body);
 
+    //saving new value in nvs
+    save_int_value_by_key("specLedStrngth", specified_led_strength);
+
     httpd_resp_send(req, "changed LEDs strength", HTTPD_RESP_USE_STRLEN);
+    return ESP_OK;
+}
+
+esp_err_t post_min_max_water_disance_handler (httpd_req_t *req) {
+    char req_body[20];
+    httpd_req_recv(req, req_body, sizeof(req_body));
+
+    printf("changing specified strength!\n");
+
+    min_water_level = get_int_from_Json(req_body, "min_water");
+    max_water_level = get_int_from_Json(req_body, "max_water");
+
+    //saving new values in nvs
+    save_int_value_by_key("waterMinDist", min_water_level);
+    save_int_value_by_key("waterMaxDist", max_water_level);
+
+    httpd_resp_send(req, "changed max min water distance", HTTPD_RESP_USE_STRLEN);
+    return ESP_OK;
+}
+
+esp_err_t post_temperature_handler(httpd_req_t *req) {
+    char req_body[20];
+    httpd_req_recv(req, req_body, sizeof(req_body));
+
+    printf("changing specified temperature!\n");
+
+    //specified_temperature = get_int_from_Json(req_body, "temperature");
+    specified_temperature = atof(req_body);
+
+    //saving new value in nvs
+    save_float_value_by_key("specTemp", specified_temperature);
+
+    httpd_resp_send(req, "changed temperature", HTTPD_RESP_USE_STRLEN);
     return ESP_OK;
 }

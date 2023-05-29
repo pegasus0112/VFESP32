@@ -109,12 +109,30 @@ void server_init() {
         .user_ctx = NULL
     };
 
+        httpd_uri_t uri_post_temperature = {
+        .uri = "/temperature",
+        .method = HTTP_POST,
+        .handler = post_temperature_handler,
+        .user_ctx = NULL
+    };
+
+    
+        httpd_uri_t uri_post_water_distance = {
+        .uri = "/water",
+        .method = HTTP_POST,
+        .handler = post_min_max_water_disance_handler,
+        .user_ctx = NULL
+    };
+
+
     httpd_register_uri_handler(server_handle, &uri_get_sensors);
 
     httpd_register_uri_handler(server_handle, &uri_post_fan);
     httpd_register_uri_handler(server_handle, &uri_post_pump);
     httpd_register_uri_handler(server_handle, &uri_post_delta);
     httpd_register_uri_handler(server_handle, &uri_post_leds);
+    httpd_register_uri_handler(server_handle, &uri_post_temperature);
+    httpd_register_uri_handler(server_handle, &uri_post_water_distance);
 };
 
 void networking_init() {

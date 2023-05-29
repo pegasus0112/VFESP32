@@ -15,12 +15,15 @@
 
 state current_state = STARTING;
 
-min_water_level = 10;
+int min_water_level = 10;
 
-max_water_level = 20;
+int max_water_level = 20;
 
-// wished led strength
+
 int specified_led_strength = 3000;
+
+
+float specified_temperature = 25.0f;
 
 /**
  * deviation because regulate_leds_based_on_light() will never reach exact specified_led_strength value

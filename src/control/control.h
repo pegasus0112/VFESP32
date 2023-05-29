@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 extern float FAN_PERCENT;
 #define FAN_MIN (900)                   //Minumum fan duty
 #define FAN_MAX (8192)                  //Maximum fan duty

@@ -16,7 +16,7 @@ void init_nvs_storage()
     esp_err_t err = nvs_flash_init();
     if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND)
     {
-        printf("Error while initializing NVS: %s", esp_err_to_name(err));
+        printf("Error while initializing NVS: %s\n", esp_err_to_name(err));
         ESP_ERROR_CHECK(nvs_flash_erase());
         err = nvs_flash_init();
     }
@@ -63,7 +63,7 @@ void save_int_value_by_key(char *key, int32_t value)
 
     if (err != ESP_OK)
     {
-        printf("Error while writing key %s to storage: %d", key, err);
+        printf("Error while writing key %s to storage: %d\n", key, err);
     }
 
     // write changes to storage
@@ -71,7 +71,7 @@ void save_int_value_by_key(char *key, int32_t value)
 
     if (err != ESP_OK)
     {
-        printf("Error while nvs commit: %d", err);
+        printf("Error while nvs commit: %d\n", err);
     }
     nvs_close(storage_handler);
 }
@@ -91,7 +91,7 @@ void save_float_value_by_key(char *key, float value)
 
     if (err != ESP_OK)
     {
-        printf("Error while writing key %s to storage: %d", key, err);
+        printf("Error while writing key %s to storage: %d\n", key, err);
     }
 
     // write changes to storage
@@ -99,7 +99,7 @@ void save_float_value_by_key(char *key, float value)
 
     if (err != ESP_OK)
     {
-        printf("Error while nvs commit: %d", err);
+        printf("Error while nvs commit: %d\n", err);
     }
     nvs_close(storage_handler);
 }
@@ -140,4 +140,12 @@ float read_float_from_storage_by_key(char *key)
 void read_all_saved_data_from_nvs() {
     delta_leds = read_float_from_storage_by_key("delta_led");
     printf("loaded delta_leds = %f from NVS\n", delta_leds);
+    specified_led_strength = read_int_from_storage_by_key("specLedStrngth");
+    printf("loaded specified_led_strength = %d from NVS\n", specified_led_strength);
+    max_water_level = read_int_from_storage_by_key("waterMaxDist");
+    printf("loaded max_water_level = %d from NVS\n", max_water_level);
+    min_water_level = read_int_from_storage_by_key("waterMinDist");
+    printf("loaded min_water_level = %d from NVS\n", min_water_level);
+    specified_temperature = read_float_from_storage_by_key("specTemp");
+    printf("loaded specified_temperature = %f from NVS\n", specified_temperature);
 }
