@@ -29,4 +29,7 @@ void read_allSensor_Data()
     WATER_DISTANCE = get_distance_cm();
 
     printf("Distance: %d cm \n", WATER_DISTANCE);
+
+    TEMPERATURE = DHT11_read().temperature;
+    HUMIDITY = DHT11_read().humidity;
 }
