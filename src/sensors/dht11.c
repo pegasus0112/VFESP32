@@ -28,17 +28,15 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-#include "sensors/dht11.h"
+#include "dht11.h"
 
-static gpio_num_t DHT_PIN;
+static gpio_num_t dht_gpio;
 static int64_t last_read_time = -2000000;
 static struct dht11_reading last_read;
 
 static int _waitOrTimeout(uint16_t microSeconds, int level) {
-
     int micros_ticks = 0;
-    while(gpio_get_level(DHT_PIN) == level){ 
-
+    while(gpio_get_level(dht_gpio) == level) { 
         if(micros_ticks++ > microSeconds) 
             return DHT11_TIMEOUT_ERROR;
         ets_delay_us(1);
@@ -54,12 +52,12 @@ static int _checkCRC(uint8_t data[]) {
 }
 
 static void _sendStartSignal() {
-    gpio_set_direction(DHT_PIN, GPIO_MODE_OUTPUT);
-    gpio_set_level(DHT_PIN, 0);
-    ets_delay_us(200000);
-    gpio_set_level(DHT_PIN, 1);
+    gpio_set_direction(dht_gpio, GPIO_MODE_OUTPUT);
+    gpio_set_level(dht_gpio, 0);
+    ets_delay_us(20 * 1000);
+    gpio_set_level(dht_gpio, 1);
     ets_delay_us(40);
-    gpio_set_direction(DHT_PIN, GPIO_MODE_INPUT);
+    gpio_set_direction(dht_gpio, GPIO_MODE_INPUT);
 }
 
 static int _checkResponse() {
@@ -84,14 +82,14 @@ static struct dht11_reading _crcError() {
     return crcError;
 }
 
-void DHT11_init(gpio_num_t pin_number) {
+void DHT11_init(gpio_num_t gpio_num) {
     /* Wait 1 seconds to make the device pass its initial unstable status */
     vTaskDelay(1000 / portTICK_PERIOD_MS);
-    DHT_PIN = pin_number;
+    dht_gpio = gpio_num;
 }
 
 struct dht11_reading DHT11_read() {
-    /* Tried to sense too soon since last read (dht11 needs ~2 seconds to make a new read) */
+    /* Tried to sense too son since last read (dht11 needs ~2 seconds to make a new read) */
     if(esp_timer_get_time() - 2000000 < last_read_time) {
         return last_read;
     }
@@ -119,14 +117,8 @@ struct dht11_reading DHT11_read() {
 
     if(_checkCRC(data) != DHT11_CRC_ERROR) {
         last_read.status = DHT11_OK;
-
-        float temp = data[2];
-        if (data[3] & 0x80) {
-            temp = -1 - temp;
-        }
-        temp += (data[3] & 0x0f) * 0.1;
-        last_read.temperature = temp;
-        last_read.humidity = (float) (data[0] + data[1] * 0.1);
+        last_read.temperature = data[2];
+        last_read.humidity = data[0];
         return last_read;
     } else {
         return last_read = _crcError();

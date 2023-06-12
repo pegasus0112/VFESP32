@@ -8,5 +8,7 @@
         "typeinfo": "c",
         "ultrasonic.h": "c",
         "esp_err.h": "c"
-    }
+    },
+    "idf.portWin": "COM4"
+
 }

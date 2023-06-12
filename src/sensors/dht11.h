@@ -35,8 +35,8 @@ enum dht11_status {
 
 struct dht11_reading {
     int status;
-    float temperature;
-    float humidity;
+    int temperature;
+    int humidity;
 };
 
 void DHT11_init(gpio_num_t);

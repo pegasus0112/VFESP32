@@ -22,8 +22,24 @@ int max_water_level = 20;
 
 int specified_led_strength = 3000;
 
+//optimum temperature for parsley is 22 degrees
+//max range between 10-27 degrees
+float specified_temperature = 22.0f;
 
-float specified_temperature = 25.0f;
+//temperature deviation (parsley) of +- 3 degrees at 22 degrees optimum 
+float temperature_deviation = 3.0f;
+
+//maximum for parsley
+float max_temperature = 27.0f;
+
+//minimum temperature for parsley
+float min_temperature = 10.0f;
+
+//optimum humidity for parsley is between 40-60%
+float specified_humidity = 50.0f;
+
+//humidity deviation for parsley of +- 10% at 50% optimum
+float humidity_deviation = 10.0f;
 
 /**
  * deviation because regulate_leds_based_on_light() will never reach exact specified_led_strength value
@@ -109,9 +125,62 @@ void regulate_fan_based_on_light()
     change_duty_fan(remap_float_to_range(BRIGHTNESS, 0, 1000, 0, 100));
 }
 
-void regulate_fan_based_on_temperature()
+/*
+void get_average_humidity(){
+    if(timer_measurement > 0){
+
+        if(timer_measurement == 600){
+            AVERAGE_HUMIDITY = HUMIDITY_SUM / timer_measurement;
+            printf("AVG Hum: %d", AVERAGE_HUMIDITY);
+            if(AVERAGE_HUMIDITY > 75){
+                change_duty_fan(100);
+            } 
+        } 
+
+        HUMIDITY_SUM = 0;
+        timer_measurement = 0;
+    }
+}*/
+
+void regulate_fan_based_on_temperature_and_humidity()
 {
-    // TODO
+    printf("Temperature: %d, Optimum: %f \n", TEMPERATURE, specified_temperature);
+    //printf("Humidity: %d, Optimum: %f \n", HUMIDITY, specified_humidity);
+
+   // get_average_humidity();
+
+    if(TEMPERATURE <= (specified_temperature + temperature_deviation) && TEMPERATURE >= (specified_temperature - temperature_deviation)){
+        printf("Temperature OK! \n");
+        return;
+    }
+
+    if(TEMPERATURE > specified_temperature + temperature_deviation){
+        printf("Temperature too high! \n");
+        change_duty_fan(100);
+    }else if(TEMPERATURE < specified_temperature - temperature_deviation){
+        printf("Temperature too low! \n");
+        change_duty_fan(0);
+    }
+    
+}
+
+void regulate_fan_based_on_humidity(){
+
+    printf("Humidity: %d, Optimum: %f \n", HUMIDITY, specified_humidity);
+    
+    if(HUMIDITY <= (specified_humidity + humidity_deviation) && HUMIDITY >= (specified_humidity - humidity_deviation)){
+        printf("Humidity OK! \n");
+        return;
+    }
+
+    if(HUMIDITY > specified_humidity + humidity_deviation){
+        printf("Humidity too high! \n");
+        change_duty_fan(100);
+    }else if(HUMIDITY < specified_humidity - humidity_deviation){
+        printf("Humidity too low \n");
+        change_duty_fan(0);
+    }
+
 }
 
 /**
@@ -147,7 +216,9 @@ void regulate()
     case OK:
         read_allSensor_Data();
         regulate_leds_based_on_light();
-        regulate_fan_based_on_light();
+        //regulate_fan_based_on_light();
+        regulate_fan_based_on_temperature_and_humidity();
+        //regulate_fan_based_on_humidity();
         regulate_refill_pump_based_on_ultrasonic_distance();
         break;
     }
