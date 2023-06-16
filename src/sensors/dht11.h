@@ -7,7 +7,6 @@ enum dht11_status {
 };
 
 struct dht_values {
-    int status;
     int temperature;
     int humidity;
 };

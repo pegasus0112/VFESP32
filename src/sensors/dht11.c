@@ -44,6 +44,7 @@ static int checkResponse() {
 struct dht_values DHT11_read() {
     /* Tried to sense too son since last read (dht11 needs ~2 seconds to make a new read) */
     if(esp_timer_get_time() - 2000000 < last_read_time) {
+        printf("DHT needs more time, returning old values...\n");
         return values;
     }
 
@@ -53,26 +54,26 @@ struct dht_values DHT11_read() {
 
     sendStartSignal();
 
-    if(_checkResponse() == DHT11_TIMEOUT_ERROR) {
+    if(checkResponse() == DHT11_TIMEOUT_ERROR) {
         printf("DHT timeout, old values used...\n");
     }
         
     //handling response
     for(int i = 0; i < 40; i++) {
 
-        if(_waitOrTimeout(50, 0) == DHT11_TIMEOUT_ERROR) {
+        if(waitOrTimeout(50, 0) == DHT11_TIMEOUT_ERROR) {
             printf("DHT timeout, old values used...\n");
             return values;
         }
                 
-        if(_waitOrTimeout(70, 1) > 28) {
+        if(waitOrTimeout(70, 1) > 28) {
             //check for receiving 1 
             data[i/8] |= (1 << (7-(i%8)));
         }
     }
 
     //checking for caluclation errors
-    if((data[4] == (data[0] + data[1] + data[2] + data[3])) != DHT11_CRC_ERROR) {
+    if(data[4] == (data[0] + data[1] + data[2] + data[3])) {
         //updating values
         values.temperature = data[2];
         values.humidity = data[0];
