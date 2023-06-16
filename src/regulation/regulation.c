@@ -70,7 +70,6 @@ void regulate_leds_based_on_light()
     printf("multiplier: %f\n", led_multiplier);
 
     bool isTooLow = get_brightness() < specified_led_strength;
-    printf("Is too low: %s\n", isTooLow ? "true" : "false");
 
     float new_led_percent = 0;
     if (isTooLow)

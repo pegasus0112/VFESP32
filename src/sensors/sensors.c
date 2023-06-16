@@ -27,6 +27,4 @@ void read_allSensor_Data()
 
     TEMPERATURE = DHT11_read().temperature;
     HUMIDITY = DHT11_read().humidity;
-    printf("Temp: %d \n", TEMPERATURE);
-    printf("Hum: %d \n", HUMIDITY);
 }
