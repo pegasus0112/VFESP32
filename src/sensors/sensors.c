@@ -12,7 +12,6 @@ void init_sensors()
 {
     i2c_master_init();
     ultrasonic_init();
-    DHT11_init(GPIO_NUM_4);
 }
 
 
