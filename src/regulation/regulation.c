@@ -27,13 +27,8 @@ int specified_led_strength = 3000;
 float specified_temperature = 22.0f;
 
 //temperature deviation (parsley) of +- 3 degrees at 22 degrees optimum 
+// >2 because accuracy of dht11 is +-2 degree
 float temperature_deviation = 3.0f;
-
-//maximum for parsley
-float max_temperature = 27.0f;
-
-//minimum temperature for parsley
-float min_temperature = 10.0f;
 
 //optimum humidity for parsley is between 40-60%
 float specified_humidity = 50.0f;
@@ -116,13 +111,6 @@ void regulate_leds_based_on_light()
         printf("Resetting multiplier\n");
         led_multiplier = 1;
     }
-}
-
-// WILL BE REMOVED
-void regulate_fan_based_on_light()
-{
-    printf("brightness: %f \n", BRIGHTNESS);
-    change_duty_fan(remap_float_to_range(BRIGHTNESS, 0, 1000, 0, 100));
 }
 
 /*
@@ -216,7 +204,6 @@ void regulate()
     case OK:
         read_allSensor_Data();
         regulate_leds_based_on_light();
-        //regulate_fan_based_on_light();
         regulate_fan_based_on_temperature_and_humidity();
         //regulate_fan_based_on_humidity();
         regulate_refill_pump_based_on_ultrasonic_distance();
