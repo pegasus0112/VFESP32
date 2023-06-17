@@ -16,10 +16,10 @@ esp_err_t get_sensor_data_handler(httpd_req_t *req) {
 };
 
 esp_err_t post_changeSettings_handler(httpd_req_t *req) {
-    char req_body[100];
+    char req_body[150];
     httpd_req_recv(req, req_body, sizeof(req_body));
 
-    int new_min_water_level = get_int_from_Json(req_body, "min_water");
+    int new_min_water_level = get_int_from_Json(req_body, "waterMinDist");
     if (new_min_water_level)
     {
         printf("changing min_water_level\n");
@@ -27,38 +27,38 @@ esp_err_t post_changeSettings_handler(httpd_req_t *req) {
         save_int_value_by_key("waterMinDist", min_water_level);
     }
     
-    int new_max_water_level = get_int_from_Json(req_body, "max_water");
+    int new_max_water_level = get_int_from_Json(req_body, "waterMaxDist");
     if (new_max_water_level)
     {
         printf("changing max_water_level\n");
         max_water_level = new_max_water_level;
         save_int_value_by_key("waterMaxDist", max_water_level);
     }
-    
-    int new_led_strength = get_int_from_Json(req_body, "led_strength");
+
+    int new_led_strength = get_int_from_Json(req_body, "specLedStrngth");
     if (new_led_strength)
     {
         printf("changing specified_led_strength\n");
         specified_led_strength = new_led_strength;
         save_int_value_by_key("specLedStrngth", specified_led_strength);
     }
-    
-    int new_temperature = get_int_from_Json(req_body, "temperature");
+
+    int new_temperature = get_int_from_Json(req_body, "specTemp");
     if (new_temperature)
     {
         printf("changing specified_temperature\n");
         specified_temperature = new_temperature;
         save_int_value_by_key("specTemp", specified_temperature);
     }
-    
-    int new_humidity = get_int_from_Json(req_body, "humidity");
+
+    int new_humidity = get_int_from_Json(req_body, "specHum");
     if (new_humidity)
     {
         printf("changing specified_humidity\n");
         specified_humidity = new_humidity;
         save_int_value_by_key("specHum", specified_temperature);
     }
-    
+
     int new_water_pump_duty = get_int_from_Json(req_body, "pump_duty");
     if (new_water_pump_duty)
     {
@@ -66,7 +66,7 @@ esp_err_t post_changeSettings_handler(httpd_req_t *req) {
         change_duty_pump(new_water_pump_duty);
         save_int_value_by_key("pumpDuty", new_water_pump_duty);
     }
-    
+
     httpd_resp_send(req, "OK", HTTPD_RESP_USE_STRLEN);
     return ESP_OK;
 };
