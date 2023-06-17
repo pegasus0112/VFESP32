@@ -84,7 +84,7 @@ static int get_distance_cm()
     if (ultrasonic_measure_raw(400 * ROUNDTRIP_CM, &time_us) != ESP_OK)
     {
         portEXIT_CRITICAL(&mux);
-        printf("Error while reading ultrasonic sensor! \n Please check that sensor is nocht blocked, or range to wide");
+        printf("Error while reading ultrasonic sensor! \n Please check that sensor is nocht blocked, or range to wide\n");
         return -1;
     }
     return time_us / ROUNDTRIP_CM;

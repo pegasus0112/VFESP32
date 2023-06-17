@@ -147,5 +147,6 @@ void read_all_saved_data_from_nvs() {
     min_water_level = read_int_from_storage_by_key("waterMinDist");
     printf("loaded min_water_level = %d from NVS\n", min_water_level);
     specified_temperature = read_float_from_storage_by_key("specTemp");
-    printf("loaded specified_temperature = %f from NVS\n", specified_temperature);
+    printf("loaded specified_temperature = %d from NVS\n", specified_temperature);
+    specified_humidity = read_float_from_storage_by_key("specHum");
 }

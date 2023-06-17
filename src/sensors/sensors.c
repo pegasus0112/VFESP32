@@ -19,12 +19,10 @@ void read_allSensor_Data()
 {
     // here read all Sensor data and write to values
     printf("Reading sensors data...\n");
+    DHT11_read();
 
     BRIGHTNESS = get_brightness();
     WATER_DISTANCE = get_distance_cm();
-
-    printf("Distance: %d cm \n", WATER_DISTANCE);
-
-    TEMPERATURE = DHT11_read().temperature;
-    HUMIDITY = DHT11_read().humidity;
+    TEMPERATURE = getTemperature();
+    HUMIDITY = getHumidity();
 }

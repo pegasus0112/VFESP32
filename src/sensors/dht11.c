@@ -6,6 +6,17 @@
 
 #include "dht11.h"
 
+enum dht11_status {
+    DHT11_CRC_ERROR = -2,
+    DHT11_TIMEOUT_ERROR,
+    DHT11_OK
+};
+
+struct dht_values {
+    int temperature;
+    int humidity;
+};
+
 static gpio_num_t dht_pin = 4;
 static int64_t last_read_time = -2000000;
 static struct dht_values values = {-1, -1};
@@ -41,11 +52,10 @@ static int checkResponse() {
     return DHT11_OK;
 }
 
-struct dht_values DHT11_read() {
+void DHT11_read() {
     /* Tried to sense too son since last read (dht11 needs ~2 seconds to make a new read) */
     if(esp_timer_get_time() - 2000000 < last_read_time) {
         printf("DHT needs more time, returning old values...\n");
-        return values;
     }
 
     last_read_time = esp_timer_get_time();
@@ -63,7 +73,6 @@ struct dht_values DHT11_read() {
 
         if(waitOrTimeout(50, 0) == DHT11_TIMEOUT_ERROR) {
             printf("DHT timeout, old values used...\n");
-            return values;
         }
                 
         if(waitOrTimeout(70, 1) > 28) {
@@ -77,9 +86,15 @@ struct dht_values DHT11_read() {
         //updating values
         values.temperature = data[2];
         values.humidity = data[0];
-        return values;
     } else {
         printf("DHT calculation error, old values used...\n");
-        return values;
     }
+}
+
+int getTemperature() {
+    return values.temperature;
+}
+
+int getHumidity() {
+    return values.humidity;
 }

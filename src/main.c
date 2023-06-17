@@ -16,5 +16,5 @@ void app_main()
       
     esp_timer_handle_t timer_handler;
     ESP_ERROR_CHECK(esp_timer_create(&reg_timer_args, &timer_handler));
-    ESP_ERROR_CHECK(esp_timer_start_periodic(timer_handler, 1000000));
+    ESP_ERROR_CHECK(esp_timer_start_periodic(timer_handler, 3000000));
 }

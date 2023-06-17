@@ -19,22 +19,18 @@ int min_water_level = 10;
 
 int max_water_level = 20;
 
-
-int specified_led_strength = 3000;
-
-//optimum temperature for parsley is 22 degrees
-//max range between 10-27 degrees
-float specified_temperature = 22.0f;
+int specified_temperature = 22;
 
 //temperature deviation (parsley) of +- 3 degrees at 22 degrees optimum 
 // >2 because accuracy of dht11 is +-2 degree
-float temperature_deviation = 3.0f;
+int temperature_deviation = 3;
 
-//optimum humidity for parsley is between 40-60%
-float specified_humidity = 50.0f;
+int specified_humidity = 50;
 
 //humidity deviation for parsley of +- 10% at 50% optimum
-float humidity_deviation = 10.0f;
+int humidity_deviation = 10;
+
+int specified_led_strength = 3000;
 
 /**
  * deviation because regulate_leds_based_on_light() will never reach exact specified_led_strength value
@@ -131,13 +127,14 @@ void get_average_humidity(){
 
 void regulate_fan_based_on_temperature_and_humidity()
 {
-    printf("Temperature: %d, Optimum: %f \n", TEMPERATURE, specified_temperature);
+    printf("Temperature: %d, Optimum: %d \n", TEMPERATURE, specified_temperature);
     //printf("Humidity: %d, Optimum: %f \n", HUMIDITY, specified_humidity);
 
    // get_average_humidity();
 
     if(TEMPERATURE <= (specified_temperature + temperature_deviation) && TEMPERATURE >= (specified_temperature - temperature_deviation)){
         printf("Temperature OK! \n");
+        change_duty_fan(0);
         return;
     }
 
@@ -153,10 +150,11 @@ void regulate_fan_based_on_temperature_and_humidity()
 
 void regulate_fan_based_on_humidity(){
 
-    printf("Humidity: %d, Optimum: %f \n", HUMIDITY, specified_humidity);
+    printf("Humidity: %d, Optimum: %d \n", HUMIDITY, specified_humidity);
     
     if(HUMIDITY <= (specified_humidity + humidity_deviation) && HUMIDITY >= (specified_humidity - humidity_deviation)){
         printf("Humidity OK! \n");
+        change_duty_fan(0);
         return;
     }
 
@@ -176,15 +174,18 @@ void regulate_fan_based_on_humidity(){
  */
 void regulate_refill_pump_based_on_ultrasonic_distance()
 {
-
     if (!PUMP_REFILL_ON && WATER_DISTANCE <= min_water_level)
     {
+        printf("refilling!\n");
         set_state_pump_refill(true);
     }
     else if (PUMP_REFILL_ON && WATER_DISTANCE >= max_water_level)
     {
+        printf("water is at max level\n");
         set_state_pump_refill(false);
     }
+    
+    printf("refillPump status: %s\n", PUMP_REFILL_ON == true ? "ON" : "OFF");
 }
 
 void regulate()

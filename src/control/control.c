@@ -3,7 +3,7 @@
 #include "utils.h"
 
 float FAN_PERCENT;
-#define FAN_DUTY (1000)    // start duty of fan
+#define FAN_DUTY (0)    // start duty of fan
 #define FAN_FREQUENCY (10) // frequency in Hertz.
 #define FAN_TIMER LEDC_TIMER_0
 #define FAN_MODE LEDC_LOW_SPEED_MODE
@@ -250,7 +250,7 @@ void update_duty_led_blue(int duty)
 char *change_duty_fan(int duty)
 {
 
-    if (duty > 100)
+    if (duty >= 100)
     {
         FAN_PERCENT = 100;
         update_duty_fan(FAN_MAX);
@@ -260,13 +260,13 @@ char *change_duty_fan(int duty)
     if (duty <= 0)
     {
         FAN_PERCENT = 0;
-
         update_duty_fan(0);
         return "fans off";
     }
     else
     {
         FAN_PERCENT = remap_float_to_range(duty, 1, 100, FAN_MIN, FAN_MAX);
+        printf("FAN PERCENT: %f", FAN_PERCENT);
         update_duty_fan(FAN_PERCENT);
         return "fan duty updated";
     }
