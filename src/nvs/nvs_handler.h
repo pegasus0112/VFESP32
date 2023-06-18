@@ -20,7 +20,7 @@ int32_t read_int_from_storage_by_key(char *key);
 float read_float_from_storage_by_key(char *key);
 
 /**
- * saves float value in nvs storage by key
+ * saves int value in nvs storage by key
 */
 void save_int_value_by_key(char *key, int32_t value);
 
