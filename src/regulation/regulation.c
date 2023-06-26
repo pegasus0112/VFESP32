@@ -165,12 +165,12 @@ void regulate_fan_based_on_temperature_and_humidity()
  */
 void regulate_refill_pump_based_on_ultrasonic_distance()
 {
-    if (WATER_DISTANCE <= min_water_level)
+    if (WATER_DISTANCE >= min_water_level)
     {
         printf("refilling!\n");
         set_state_pump_refill(true);
     }
-    else if (WATER_DISTANCE >= max_water_level)
+    else if (WATER_DISTANCE <= max_water_level)
     {
         printf("water is at max level\n");
         set_state_pump_refill(false);

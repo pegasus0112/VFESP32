@@ -41,12 +41,12 @@ float PUMP_PERCENT = 0;
 #define PUMP_DUTY_RES LEDC_TIMER_13_BIT // duty resolution to 13 bits
 
 bool PUMP_REFILL_ON = false;
-#define PUMP_REFILL_DUTY (2700)      // duty of pump IF on, NOT START
+#define PUMP_REFILL_DUTY (8000)      // duty of pump IF on, NOT START
 #define PUMP_REFILL_FREQUENCY (5000) // frequency in Hertz.
 #define PUMP_REFILL_TIMER LEDC_TIMER_1
 #define PUMP_REFILL_MODE LEDC_LOW_SPEED_MODE
 #define PUMP_REFILL_OUTPUT_IO (16) // output GPIO
-#define PUMP_REFILL_CHANNEL LEDC_CHANNEL_1
+#define PUMP_REFILL_CHANNEL LEDC_CHANNEL_4
 #define PUMP_REFILL_DUTY_RES LEDC_TIMER_13_BIT // duty resolution to 13 bits
 
 int fan_speed_standard = 30;           // initial fan standard speed
