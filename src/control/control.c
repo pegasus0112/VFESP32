@@ -268,7 +268,7 @@ char * change_duty_fan(int duty)
     else
     {
         FAN_PERCENT = remap_float_to_range(duty, 1, 100, FAN_MIN, FAN_MAX);
-        printf("FAN PERCENT: %f", FAN_PERCENT);
+        printf("FAN PERCENT: %f\n", FAN_PERCENT);
         update_duty_fan(FAN_PERCENT);
         return "fan duty updated";
     }

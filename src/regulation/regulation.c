@@ -176,7 +176,7 @@ void regulate_refill_pump_based_on_ultrasonic_distance()
         set_state_pump_refill(false);
     }
     
-    printf("refillPump status: %s\n", PUMP_REFILL_ON == true ? "ON" : "OFF");
+    printf("distance: %d refillPump status: %s\n",WATER_DISTANCE, PUMP_REFILL_ON == true ? "ON" : "OFF");
 }
 
 void regulate()
