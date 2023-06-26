@@ -152,5 +152,6 @@ void read_all_saved_data_from_nvs() {
     printf("loaded specified_humidity = %d from NVS\n", specified_humidity);
     int pump_duty = read_int_from_storage_by_key("pumpDuty");
     printf("loaded pump_duty = %d from NVS\n", pump_duty);
+    change_duty_pump(100);
     change_duty_pump(pump_duty);
 }

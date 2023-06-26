@@ -5,7 +5,7 @@ extern float FAN_PERCENT;
 #define FAN_MAX (8192)                  // Maximum fan duty
 
 extern float PUMP_PERCENT;
-#define PUMP_MIN (2700)                  //Minumum pump duty
+#define PUMP_MIN (1900)                  //Minumum pump duty
 #define PUMP_MAX (8192)                  //Maximum pump duty
 
 extern float LED_RED_PERCENT;
