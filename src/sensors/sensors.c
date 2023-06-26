@@ -6,7 +6,13 @@
 float BRIGHTNESS = -1.0f;
 int TEMPERATURE = 0.0f;
 int HUMIDITY = 0.0f;
+int HUMIDITY_SUM = 0;
+int AVERAGE_HUMIDITY = 0;
 int WATER_DISTANCE = -1.0f;
+
+
+//Timer for measurements over a period of time
+int timer_measurement = 0;
 
 void init_sensors()
 {

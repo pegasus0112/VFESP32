@@ -56,3 +56,7 @@ extern int max_water_level;
 */
 void regulate();
 
+/**
+ * init every timer which is used in this system 
+*/
+void init_timer_fcts();

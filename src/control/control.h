@@ -1,8 +1,8 @@
 #include <stdbool.h>
 
 extern float FAN_PERCENT;
-#define FAN_MIN (900)                   //Minumum fan duty
-#define FAN_MAX (8192)                  //Maximum fan duty
+#define FAN_MIN (900)                   // Minumum fan duty
+#define FAN_MAX (8192)                  // Maximum fan duty
 
 extern float PUMP_PERCENT;
 #define PUMP_MIN (2700)                  //Minumum pump duty
@@ -19,17 +19,23 @@ void pwm_init(void);
 
 
 extern float blue_proportion_percent;
+
 /**
  * parameter is percentual power of fan
  * return string of methode executed state
 */
 char * change_duty_fan(int duty);
 
+/*
+* set fan speed to standard value
+*/
+void set_fan_to_standard();
+
 /**
  * parameter is percentual power of pump 
  * return string of methode executed state
  */
-char * change_duty_pump(int duty);
+void change_duty_pump(int duty);
 
 /**
  * parameter is percentual power of red led

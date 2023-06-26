@@ -49,6 +49,8 @@ bool PUMP_REFILL_ON = false;
 #define PUMP_REFILL_CHANNEL LEDC_CHANNEL_1
 #define PUMP_REFILL_DUTY_RES LEDC_TIMER_13_BIT // duty resolution to 13 bits
 
+int fan_speed_standard = 30;           // initial fan standard speed
+
 // initialize pwm (timer & channel) of fans based on FAN_* defines
 void init_fan()
 {
@@ -247,7 +249,7 @@ void update_duty_led_blue(int duty)
     ledc_update_duty(LED_BLUE_MODE, LED_BLUE_CHANNEL);
 }
 
-char *change_duty_fan(int duty)
+char * change_duty_fan(int duty)
 {
 
     if (duty >= 100)
@@ -272,7 +274,12 @@ char *change_duty_fan(int duty)
     }
 }
 
-char *change_duty_pump(int duty)
+void set_fan_to_standard(){
+    //int val = (int)FAN_SPEED_STANDARD;
+    change_duty_fan(fan_speed_standard);
+}
+
+void change_duty_pump(int duty)
 {
     if (duty > 100)
     {
@@ -284,13 +291,13 @@ char *change_duty_pump(int duty)
         PUMP_PERCENT = 0;
 
         update_duty_pump(0);
-        return "pump off";
+        //return "pump off";
     }
     else
     {
         PUMP_PERCENT = remap_float_to_range(duty, 1, 100, PUMP_MIN, PUMP_MAX);
         update_duty_pump(PUMP_PERCENT);
-        return "pump duty updated";
+        //return "pump duty updated";
     }
 }
 

@@ -12,6 +12,7 @@
 #include "sensors/bh1750.h"
 #include "nvs/nvs_handler.h"
 #include "http/http_server.h"
+#include "esp_timer.h"
 
 state current_state = STARTING;
 
@@ -19,13 +20,22 @@ int min_water_level = 10;
 
 int max_water_level = 20;
 
-int specified_temperature = 22;
+int specified_temperature = 20;
 
-//temperature deviation (parsley) of +- 3 degrees at 22 degrees optimum 
+//temperature deviation (parsley) of +- 7 degrees (--> 13-27 degrees)
 // >2 because accuracy of dht11 is +-2 degree
-int temperature_deviation = 3;
+int temperature_deviation = 7;
+
 
 int specified_humidity = 50;
+
+//init fan-off-timer to regulate the humidity system after x seconds
+const esp_timer_create_args_t fan_timer_off = {
+    .callback = &set_fan_to_standard,
+    .name = "humidity regulation"
+};
+
+esp_timer_handle_t fan_off_handler;
 
 //humidity deviation for parsley of +- 10% at 50% optimum
 int humidity_deviation = 10;
@@ -43,6 +53,12 @@ int leds_allowed_deviation = 15;
  * led sterngth change is thereby potentially and not linearly
  */
 float led_multiplier = 1;
+
+void init_timer_fcts(){
+
+    //init timer handler for fan off timer
+    ESP_ERROR_CHECK(esp_timer_create(&fan_timer_off, &fan_off_handler));
+}
 
 /**
  * regulating red & blue leds
@@ -108,33 +124,28 @@ void regulate_leds_based_on_light()
     }
 }
 
-/*
-void get_average_humidity(){
-    if(timer_measurement > 0){
-
-        if(timer_measurement == 600){
-            AVERAGE_HUMIDITY = HUMIDITY_SUM / timer_measurement;
-            printf("AVG Hum: %d", AVERAGE_HUMIDITY);
-            if(AVERAGE_HUMIDITY > 75){
-                change_duty_fan(100);
-            } 
-        } 
-
-        HUMIDITY_SUM = 0;
-        timer_measurement = 0;
-    }
-}*/
-
 void regulate_fan_based_on_temperature_and_humidity()
 {
     printf("Temperature: %d, Optimum: %d \n", TEMPERATURE, specified_temperature);
-    //printf("Humidity: %d, Optimum: %f \n", HUMIDITY, specified_humidity);
+    printf("Humidity: %d, Optimum: %d \n", HUMIDITY, specified_humidity);
 
-   // get_average_humidity();
+
+    if(timer_measurement >= 600){ //10min (600s)
+        AVERAGE_HUMIDITY = HUMIDITY_SUM / timer_measurement;
+        printf("AVG Hum: %d \n", AVERAGE_HUMIDITY);
+        if(AVERAGE_HUMIDITY > 75){
+            
+            change_duty_fan(100); //for x minutes
+            ESP_ERROR_CHECK(esp_timer_start_once(fan_off_handler, 180000000)); //3 Min | 180 s
+          
+        } 
+        HUMIDITY_SUM = 0;
+        timer_measurement = 0;
+    }
 
     if(TEMPERATURE <= (specified_temperature + temperature_deviation) && TEMPERATURE >= (specified_temperature - temperature_deviation)){
         printf("Temperature OK! \n");
-        change_duty_fan(0);
+        change_duty_fan(30);
         return;
     }
 
@@ -146,26 +157,6 @@ void regulate_fan_based_on_temperature_and_humidity()
         change_duty_fan(0);
     }
     
-}
-
-void regulate_fan_based_on_humidity(){
-
-    printf("Humidity: %d, Optimum: %d \n", HUMIDITY, specified_humidity);
-    
-    if(HUMIDITY <= (specified_humidity + humidity_deviation) && HUMIDITY >= (specified_humidity - humidity_deviation)){
-        printf("Humidity OK! \n");
-        change_duty_fan(0);
-        return;
-    }
-
-    if(HUMIDITY > specified_humidity + humidity_deviation){
-        printf("Humidity too high! \n");
-        change_duty_fan(100);
-    }else if(HUMIDITY < specified_humidity - humidity_deviation){
-        printf("Humidity too low \n");
-        change_duty_fan(0);
-    }
-
 }
 
 /**
@@ -203,9 +194,14 @@ void regulate()
         break;
     case OK:
         read_allSensor_Data();
+
+        timer_measurement += 1;
+        printf("timer: %d \n", timer_measurement);
+        HUMIDITY_SUM += HUMIDITY;
+        printf("humidity sum: %d \n", HUMIDITY_SUM);
+
         regulate_leds_based_on_light();
         regulate_fan_based_on_temperature_and_humidity();
-        //regulate_fan_based_on_humidity();
         regulate_refill_pump_based_on_ultrasonic_distance();
         break;
     }
