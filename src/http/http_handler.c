@@ -67,6 +67,15 @@ esp_err_t post_changeSettings_handler(httpd_req_t *req) {
         save_int_value_by_key("pumpDuty", new_water_pump_duty);
     }
 
+    int new_blue_proportion_percent = get_int_from_Json(req_body, "blue_proportion_percent");
+    if (new_blue_proportion_percent)
+    {
+        printf("changing blue_proportion_percent\n");
+        BLUE_PROPORTION_PERCENT = new_blue_proportion_percent;
+        change_duty_led_blue((LED_RED_PERCENT - delta_leds) * (BLUE_PROPORTION_PERCENT / 100));
+        save_int_value_by_key("bluePropPercent", new_blue_proportion_percent);
+    }
+
     httpd_resp_send(req, "OK", HTTPD_RESP_USE_STRLEN);
     return ESP_OK;
 };

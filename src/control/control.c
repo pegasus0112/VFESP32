@@ -11,7 +11,7 @@ float FAN_PERCENT;
 #define FAN_CHANNEL LEDC_CHANNEL_0
 #define FAN_DUTY_RES LEDC_TIMER_13_BIT // duty resolution 13 bits
 
-float blue_proportion_percent = 25;
+float BLUE_PROPORTION_PERCENT = 25;
 
 float LED_RED_PERCENT = 0;
 #define LED_RED_DUTY (LED_MIN)   // start duty 50%. ((2 ** 13) - 1) * 50% = 4095
@@ -32,7 +32,7 @@ float LED_BLUE_PERCENT = 0;
 #define LED_BLUE_DUTY_RES LEDC_TIMER_13_BIT // duty resolution to 13 bits
 
 float PUMP_PERCENT = 0;
-#define PUMP_DUTY (2700)      // start duty of pump
+int PUMP_DUTY = 8100;      // default duty of pump
 #define PUMP_FREQUENCY (5000) // frequency in Hertz.
 #define PUMP_TIMER LEDC_TIMER_1
 #define PUMP_MODE LEDC_LOW_SPEED_MODE

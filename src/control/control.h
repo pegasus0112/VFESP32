@@ -5,6 +5,7 @@ extern float FAN_PERCENT;
 #define FAN_MAX (8192)                  // Maximum fan duty
 
 extern float PUMP_PERCENT;
+extern int PUMP_DUTY;
 #define PUMP_MIN (1900)                  //Minumum pump duty
 #define PUMP_MAX (8192)                  //Maximum pump duty
 
@@ -18,7 +19,7 @@ extern bool PUMP_REFILL_ON;
 void pwm_init(void);
 
 
-extern float blue_proportion_percent;
+extern float BLUE_PROPORTION_PERCENT;
 
 /**
  * parameter is percentual power of fan

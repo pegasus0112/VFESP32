@@ -51,7 +51,7 @@ extern int min_water_level;
 extern int max_water_level;
 
 /**
- * regulation methode taht will be called timer periodically
+ * regulation methode that will be called timer periodically
  * period decided by main (current every 1s)
 */
 void regulate();
