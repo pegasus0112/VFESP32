@@ -153,5 +153,5 @@ void read_all_saved_data_from_nvs() {
     PUMP_DUTY = read_int_from_storage_by_key("pumpDuty");
     printf("loaded PUMP_DUTY = %d from NVS\n", PUMP_DUTY);
     BLUE_PROPORTION_PERCENT = read_int_from_storage_by_key("bluePropPercent");
-    printf("loaded BLUE_PROPORTION_PERCENT = %d from NVS\n", BLUE_PROPORTION_PERCENT);
+    printf("loaded BLUE_PROPORTION_PERCENT = %f from NVS\n", BLUE_PROPORTION_PERCENT);
 }
