@@ -33,7 +33,7 @@ float LED_BLUE_PERCENT = 0;
 
 float PUMP_PERCENT = 0;
 int PUMP_DUTY = 8100;      // default duty of pump
-#define PUMP_FREQUENCY (5000) // frequency in Hertz.
+#define PUMP_FREQUENCY (120) // frequency in Hertz.
 #define PUMP_TIMER LEDC_TIMER_1
 #define PUMP_MODE LEDC_LOW_SPEED_MODE
 #define PUMP_OUTPUT_IO (17) // output GPIO
@@ -42,7 +42,7 @@ int PUMP_DUTY = 8100;      // default duty of pump
 
 bool PUMP_REFILL_ON = false;
 #define PUMP_REFILL_DUTY (8000)      // duty of pump IF on, NOT START
-#define PUMP_REFILL_FREQUENCY (5000) // frequency in Hertz.
+#define PUMP_REFILL_FREQUENCY (150) // frequency in Hertz.
 #define PUMP_REFILL_TIMER LEDC_TIMER_1
 #define PUMP_REFILL_MODE LEDC_LOW_SPEED_MODE
 #define PUMP_REFILL_OUTPUT_IO (16) // output GPIO
