@@ -19,7 +19,7 @@ extern bool PUMP_REFILL_ON;
 void pwm_init(void);
 
 
-extern float BLUE_PROPORTION_PERCENT;
+extern int BLUE_PROPORTION_PERCENT;
 
 /**
  * parameter is percentual power of fan

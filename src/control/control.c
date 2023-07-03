@@ -11,7 +11,7 @@ float FAN_PERCENT;
 #define FAN_CHANNEL LEDC_CHANNEL_0
 #define FAN_DUTY_RES LEDC_TIMER_13_BIT // duty resolution 13 bits
 
-float BLUE_PROPORTION_PERCENT = 25;
+int BLUE_PROPORTION_PERCENT = 25;
 
 float LED_RED_PERCENT = 0;
 #define LED_RED_DUTY (LED_MIN)   // start duty 50%. ((2 ** 13) - 1) * 50% = 4095
