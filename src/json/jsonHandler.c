@@ -54,7 +54,7 @@ char *get_farm_status_as_json_string()
     cJSON_AddNumberToObject(controlls, "ultrasonicMinDistance", min_water_level);
     cJSON_AddNumberToObject(controlls, "ultrasonicMaxDistance", max_water_level);
 
-    cJSON_AddNumberToObject(controlls, "deltaLeds", delta_leds);
+    cJSON_AddNumberToObject(controlls, "deltaLeds", DELTA_LEDS_PERCENT);
 
     cJSON_AddItemToObject(data, "controlls", controlls);
     return cJSON_Print(data);

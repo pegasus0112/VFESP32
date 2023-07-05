@@ -108,8 +108,8 @@ void regulate_leds_based_on_light()
 
     printf("setting red value: %f!\n", new_led_percent);
     change_duty_led_red(new_led_percent);
-    printf("setting blue value: %f!\n", (new_led_percent - delta_leds) * (BLUE_PROPORTION_PERCENT / 100));
-    change_duty_led_blue((new_led_percent - delta_leds) * (BLUE_PROPORTION_PERCENT / 100));
+    printf("setting blue value: %f!\n", (LED_RED_PERCENT * (DELTA_LEDS_PERCENT/100)) * (BLUE_PROPORTION_PERCENT / 100));
+    change_duty_led_blue((LED_RED_PERCENT * (DELTA_LEDS_PERCENT/100)) * (BLUE_PROPORTION_PERCENT / 100));
 
     printf("Current Percent: %f\n", LED_RED_PERCENT);
 

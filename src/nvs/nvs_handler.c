@@ -138,8 +138,8 @@ float read_float_from_storage_by_key(char *key)
 }
 
 void read_all_saved_data_from_nvs() {
-    delta_leds = read_float_from_storage_by_key("delta_led");
-    printf("loaded delta_leds = %f from NVS\n", delta_leds);
+    DELTA_LEDS_PERCENT = read_float_from_storage_by_key("delta_led");
+    printf("loaded delta_leds = %f from NVS\n", DELTA_LEDS_PERCENT);
     specified_led_strength = read_int_from_storage_by_key("specLedStrngth");
     printf("loaded specified_led_strength = %d from NVS\n", specified_led_strength);
     max_water_level = read_int_from_storage_by_key("waterMaxDist");

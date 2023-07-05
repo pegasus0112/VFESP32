@@ -9,10 +9,10 @@
 //read bh1750 for why delay must be bigger 120ms
 #define DELAY_BETWEEN_MEASSURE 250
 
-float delta_leds = 0;
+float DELTA_LEDS_PERCENT = 0;
 
 float meassure_led_delta() {
-    float new_delta = 0;
+    float new_delta_percent = 0;
 
     //powering off leds before test
     change_duty_led_red(0);
@@ -34,8 +34,8 @@ float meassure_led_delta() {
         change_duty_led_blue(0);
 
         printf("diff: %f  \n", red_lux - blue_lux);
-        printf("percent : %f  \n", (100/blue_lux)*red_lux -100);
-        new_delta += (100/blue_lux)*red_lux -100;
+        printf("percent : %f  \n", 100*(blue_lux-red_lux)/blue_lux);
+        new_delta_percent += 100-(100*(blue_lux-red_lux)/blue_lux);
     }
 
     //after changing strength for testing, setting leds strength to lowest
@@ -44,11 +44,11 @@ float meassure_led_delta() {
 
     //new_delta is in percent
     // 100 values added in new_delta, divede by 100 to get average
-    new_delta = new_delta / 100;
+    new_delta_percent = new_delta_percent / 100;
 
-    printf("new delta: %f\n", new_delta);
+    printf("new delta: %f\n", new_delta_percent);
 
-    delta_leds = new_delta;
+    DELTA_LEDS_PERCENT = new_delta_percent;
 
-    return new_delta;
+    return DELTA_LEDS_PERCENT;
 }

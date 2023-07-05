@@ -72,7 +72,7 @@ esp_err_t post_changeSettings_handler(httpd_req_t *req) {
     {
         printf("changing blue_proportion_percent\n");
         BLUE_PROPORTION_PERCENT = new_blue_proportion_percent;
-        change_duty_led_blue((LED_RED_PERCENT - delta_leds) * (BLUE_PROPORTION_PERCENT / 100));
+        change_duty_led_blue((LED_RED_PERCENT * (DELTA_LEDS_PERCENT/100)) * (BLUE_PROPORTION_PERCENT / 100));
         save_int_value_by_key("bluePropPercent", new_blue_proportion_percent);
     }
 
