@@ -22,9 +22,9 @@ int max_water_level = 20;
 
 int specified_temperature = 20;
 
-//temperature deviation (parsley) of +- 7 degrees (--> 13-27 degrees)
+//temperature deviation (parsley) of +- 4 degrees (--> 16-24 degrees)
 // >2 because accuracy of dht11 is +-2 degree
-int temperature_deviation = 7;
+int temperature_deviation = 4;
 
 
 int specified_humidity = 50;
@@ -78,6 +78,7 @@ void regulate_leds_based_on_light()
 
     printf("brightness BAD!\n");
 
+    // increasing multiplier
     led_multiplier *= 1.5f;
     printf("multiplier: %f\n", led_multiplier);
 
@@ -162,6 +163,7 @@ void regulate_fan_based_on_temperature_and_humidity()
 /**
  * regulation for activating refill water pump if water level is too low
  * deactivate if it reaches the max_water_level
+ * max_water_level is closer to sensor then min_water_level
  */
 void regulate_refill_pump_based_on_ultrasonic_distance()
 {

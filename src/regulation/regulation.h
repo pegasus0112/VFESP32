@@ -52,11 +52,12 @@ extern int max_water_level;
 
 /**
  * regulation methode that will be called timer periodically
- * period decided by main (current every 1s)
+ * period decided by main (current every 3s)
 */
 void regulate();
 
 /**
- * init every timer which is used in this system 
+ * init every timer which is used in this system
+ * except regulation timer 
 */
 void init_timer_fcts();
